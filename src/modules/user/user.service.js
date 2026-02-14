@@ -2,21 +2,15 @@ import { providerEnum } from "../../common/enums/user.enum.js";
 import * as db_service from "../../DB/models/db.service.js";
 import userModel from "../../DB/models/user.model.js";
 import { responseSuccess } from "../../common/utilites/response.success.js";
-import {
-  symmetricDecryption,
-  symmetricEncryption,
-} from "../../common/utilites/security/encrypt.security.js";
+import { symmetricEncryption } from "../../common/utilites/security/encrypt.security.js";
 import {
   comparePassword,
   hashPassword,
 } from "../../common/utilites/security/hash.security.js";
 import { sendEmail } from "../../common/utilites/email/send.email.js";
-import {
-  decryptAsymmetric,
-  encryptAsymmetric,
-} from "../../common/utilites/security/asymmetric.security.js";
+import { encryptAsymmetric } from "../../common/utilites/security/asymmetric.security.js";
 import { v4 as uuidv4 } from "uuid";
-import { generateToken, verifyToken } from "../../common/utilites/security/toke.security.js";
+import { generateToken } from "../../common/utilites/security/toke.security.js";
 
 export const signUp = async (req, res, next) => {
   const {
@@ -159,34 +153,15 @@ export const signIn = async (req, res) => {
 // };
 
 export const getProfile = async (req, res, next) => {
-  const { authorization } = req.headers;
-  const decode = verifyToken({
-    token: authorization
-  });
-
-  const user = await db_service.findOne({
-    model: userModel,
-    filter: { _id: decode.id },
-    options: { select: "-password -otp -__v" },
-  });
-  if (!user) {
-    throw new Error("user not found", { cause: 404 });
-  }
-
-  let decryptedPhone;
-  if (user.encryptionMode === "asymmetric") {
-    decryptedPhone = decryptAsymmetric(user.phone);
-  } else {
-    decryptedPhone = symmetricDecryption(user.phone);
-  }
+  // const { authorization } = req.headers;
+  // const decode = verifyToken({
+  //   token: authorization
+  // }); now using middleware
 
   responseSuccess({
     res,
     status: 200,
     message: "Profile fetched successfully",
-    data: {
-      ...user._doc,
-      phone: decryptedPhone,
-    },
+    data: req.user,
   });
 };
