@@ -1,0 +1,223 @@
+{
+  "info": {
+    "_postman_id": "42138a3c-f637-477b-8a6a-b34268e9ea21",
+    "name": "SarahaApp",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47319938",
+    "_collection_link": "https://go.postman.co/collection/47319938-42138a3c-f637-477b-8a6a-b34268e9ea21?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "user",
+      "item": [
+        {
+          "name": "signup",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userName\" : \"Ahmed Mahmoud\",\r\n\"email\": \"pilot0111@gmail.com\",\r\n\"password\": \"1234567\",\r\n\"cPassword\": \"1234567\",\r\n\"age\": 40,\r\n\"role\": \"admin\",\r\n\"phone\":\"0555136589\",\r\n\"encryptionMode\":\"asymmetric\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/signup",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"email\": \"pilot222@gmail.com\",\r\n\"password\": \"1234567\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/signin",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "signin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile, Old w/o verification",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODVmZjhiYTYwYWI4ZGI5Zjc4M2MzMCIsImlzTG9nZ2VkSW4iOnRydWUsImlhdCI6MTc3MDM4OTM5MiwiZXhwIjoxNzcwMzkyOTkyfQ.Om-HeFq0G3KMbPrUVx2F0EDsG-_6vDMC-KSY2ihg_qs",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/profile/:id",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "profile",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "698ee3f9749c9d1ca7e6ae02"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile, new with JWT",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGMxYWU0YjRjYTg1ODhlNjlkMzdjYSIsImVtYWlsIjoicGlsb3QyMjJAZ21haWwuY29tIiwiaWF0IjoxNzcxMDY4OTgwfQ.oWt_uYnLQW4XzKJ59OFQgt6N3pTZvi6eGMrx-dVL860",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"AHmed Mahmoud Omar\",\r\n\"email\": \"pilot01112@gmail.com\",\r\n\"age\":45\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/profile",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update loged-in user",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODVmZjhiYTYwYWI4ZGI5Zjc4M2MzMCIsImlzTG9nZ2VkSW4iOnRydWUsImlhdCI6MTc3MDM4OTM5MiwiZXhwIjoxNzcwMzkyOTkyfQ.Om-HeFq0G3KMbPrUVx2F0EDsG-_6vDMC-KSY2ihg_qs",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"AHmed Mahmoud Omar\",\r\n\"email\": \"pilot01112@gmail.com\",\r\n\"age\":45\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete loged-in user",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODRhZGRlYmU4ZmZhODY2ZGNkNTM0YyIsImlzTG9nZ2VkSW4iOnRydWUsImlhdCI6MTc3MDM4NzgyNSwiZXhwIjoxNzcwMzkxNDI1fQ.WneOQFpYsBJjS5aBHIVXIdv7GsOQTXhuAUekBY1IaxU",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -9,7 +9,14 @@ export const authentication = async (req, res, next) => {
   if (!authorization) {
     throw new Error("token not found", { cause: 401 });
   }
-  const decoded = verifyToken({ token: authorization });
+  if (!authorization.startsWith("Bearer ")) {
+    throw new Error("invalid token", { cause: 401 });
+  }
+const token = authorization.split(" ")[1];
+  if (!token) {
+    throw new Error("invalid token", { cause: 401 });
+  }
+  const decoded = verifyToken({ token: token });
   if (!decoded || !decoded?.id) {
     throw new Error("invalid token", { cause: 401 });
   }
