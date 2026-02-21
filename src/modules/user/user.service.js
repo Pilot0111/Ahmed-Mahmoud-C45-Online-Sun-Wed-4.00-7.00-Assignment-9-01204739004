@@ -11,6 +11,8 @@ import { sendEmail } from "../../common/utilites/email/send.email.js";
 import { encryptAsymmetric } from "../../common/utilites/security/asymmetric.security.js";
 import { v4 as uuidv4 } from "uuid";
 import { generateToken } from "../../common/utilites/security/toke.security.js";
+import { OAuth2Client } from "google-auth-library";
+import { SALT_ROUNDS } from "../../config/config.service.js";
 
 export const signUp = async (req, res, next) => {
   const {
@@ -65,7 +67,7 @@ export const signUp = async (req, res, next) => {
     date: {
       userName,
       email,
-      password: hashPassword({ plainText: password }),
+      password: hashPassword({ plainText: password, salt: SALT_ROUNDS }),
       age,
       gender,
       provider,
@@ -79,6 +81,67 @@ export const signUp = async (req, res, next) => {
     status: 201,
     message: "user created successfully",
     user,
+  });
+};
+
+export const signUpGmail = async (req, res) => {
+  const { idToken } = req.body;
+  console.log(idToken);
+
+  const client = new OAuth2Client();
+
+  const ticket = await client.verifyIdToken({
+    idToken: idToken,
+    audience:
+      "725208979610-gf7bf1v4ic94jj4n32ga591tu3is7ftf.apps.googleusercontent.com",
+  });
+  const payload = ticket.getPayload();
+  const { email, email_verified, name, picture } = payload;
+  let user = await db_service.findOne({
+    model: userModel,
+    filter: { email },
+  });
+  if (!user) {
+    user = await db_service.create({
+      model: userModel,
+      date: {
+        userName: name,
+        email,
+        confirmed: email_verified,
+        // password: null,
+        // age: null,
+        // gender: null,
+        provider: providerEnum.google,
+        // phone: null,
+        // encryptionMode: null,
+        // otp: null,
+        profilePicture: picture,
+      },
+    });
+  }
+  if (user.provider == providerEnum.system) {
+    throw new Error("please login with your email", { cause: 400 });
+  }
+
+  const access_token = generateToken({
+    payload: {
+      id: user._id,
+      email: user.email,
+    },
+    options: {
+      expiresIn: "1d",
+      audience: "user",
+      issuer: "Saraha",
+      noTimestamp: true,
+      notBefore: 10, //in seconds,when the token will be valid
+      jwtid: uuidv4(),
+    },
+  });
+  responseSuccess({
+    res,
+    status: 201,
+    message: "user created successfully",
+    data: { access_token },
   });
 };
 

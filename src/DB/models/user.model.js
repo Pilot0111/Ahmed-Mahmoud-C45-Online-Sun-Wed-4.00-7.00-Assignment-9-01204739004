@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { genderEnum, providerEnum } from "../../common/enums/user.enum.js";
+import {  roleEnum, genderEnum, providerEnum, encryptionModeEnum } from "../../common/enums/user.enum.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -21,12 +21,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      trim: true, 
+      trim: true,
       //lowercase: true,//
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return this.provider == providerEnum.google ? false : true;
+      },
       trim: true,
       minLength: 6,
     },
@@ -41,20 +43,24 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: String,
     confirmed: Boolean,
-    otp: String,// one time password for email verification
-    provider : {
+    otp: String, // one time password for email verification
+    provider: {
       type: String,
       enum: Object.values(providerEnum),
       default: providerEnum.system,
       required: true,
     },
+    role : {
+      type: String,
+      enum: Object.values(roleEnum),
+      default: roleEnum.user,
+    },
     encryptionMode: {
       type: String,
-      enum: ["symmetric", "asymmetric"],
-      default: "symmetric",
+      enum: Object.values(encryptionModeEnum),
+      default: encryptionModeEnum.symmetric,
     },
-    phone: String
-
+    phone: String,
   },
   {
     timestamps: true,
@@ -68,13 +74,15 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-userSchema.virtual("userName").get(function () {
-  return `${this.firstName} ${this.lastName}`;
-}).set(function (value) {
-  const [firstName, lastName] = value.split(" ");
-  this.set({firstName, lastName});
-});
-
+userSchema
+  .virtual("userName")
+  .get(function () {
+    return `${this.firstName} ${this.lastName}`;
+  })
+  .set(function (value) {
+    const [firstName, lastName] = value.split(" ");
+    this.set({ firstName, lastName });
+  });
 
 const userModel = mongoose.models.User || mongoose.model("User", userSchema);
 export default userModel;

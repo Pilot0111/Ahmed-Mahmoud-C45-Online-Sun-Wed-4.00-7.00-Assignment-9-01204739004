@@ -11,3 +11,13 @@ export const providerEnum = {
     facebook: "facebook"
 
 }
+
+export const roleEnum = {
+    user: "user",
+    admin: "admin"
+}
+
+export const encryptionModeEnum = {
+    symmetric: "symmetric",
+    asymmetric: "asymmetric"
+}
