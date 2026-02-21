@@ -17,7 +17,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\"userName\" : \"Ahmed Mahmoud\",\r\n\"email\": \"pilot0111@gmail.com\",\r\n\"password\": \"1234567\",\r\n\"cPassword\": \"1234567\",\r\n\"age\": 40,\r\n\"role\": \"admin\",\r\n\"phone\":\"0555136589\",\r\n\"encryptionMode\":\"asymmetric\"\r\n}\r\n",
+              "raw": "{\"userName\" : \"Ahmed Mahmoud\",\r\n\"email\": \"pilot0111@gmail.com\",\r\n\"password\": \"1234567\",\r\n\"cPassword\": \"1234567\",\r\n\"age\": 40,\r\n\"gender\":\"male\",\r\n\"role\": \"admin\",\r\n\"phone\":\"0555136589\",\r\n\"provider\":\"system\",\r\n\"encryptionMode\":\"asymmetric\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -48,7 +48,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n\"email\": \"pilot222@gmail.com\",\r\n\"password\": \"1234567\"\r\n}\r\n",
+              "raw": "{\r\n\"email\": \"pilot0111@gmail.com\",\r\n\"password\": \"1234567\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -56,7 +56,7 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/users/signin",
+              "raw": "localhost:3000/users/signin?x=20",
               "host": [
                 "localhost"
               ],
@@ -64,6 +64,12 @@
               "path": [
                 "users",
                 "signin"
+              ],
+              "query": [
+                {
+                  "key": "x",
+                  "value": "20"
+                }
               ]
             }
           },
@@ -124,7 +130,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGMxYWU0YjRjYTg1ODhlNjlkMzdjYSIsImVtYWlsIjoicGlsb3QyMjJAZ21haWwuY29tIiwiaWF0IjoxNzcxMDY4OTgwfQ.oWt_uYnLQW4XzKJ59OFQgt6N3pTZvi6eGMrx-dVL860",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTgxNWI0OTJkYjhiY2QyNWJmNDRjNyIsImVtYWlsIjoicGlsb3QwMTExQGdtYWlsLmNvbSIsImlhdCI6MTc3MTU3NDc0MH0.oiFLjjINDjMfEHrYFLog33LYJeInxqxCZcVz1rpFFZI",
                 "type": "text"
               }
             ],
