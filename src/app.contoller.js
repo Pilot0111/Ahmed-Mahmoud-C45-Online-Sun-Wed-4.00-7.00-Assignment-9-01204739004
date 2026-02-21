@@ -5,6 +5,7 @@ import userRouter from "./modules/user/user.controller.js";
 const app = express();
 const port = PORT;
 import cors from "cors";
+import e from "express";
 const bootsrap = async (req, res) => {
   app.use(cors(), express.json());
   app.get("/", (req, res) => {

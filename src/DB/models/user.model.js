@@ -44,6 +44,7 @@ const userSchema = new mongoose.Schema(
     profilePicture: String,
     confirmed: Boolean,
     otp: String, // one time password for email verification
+    otpExpiresAt: Date,
     provider: {
       type: String,
       enum: Object.values(providerEnum),

@@ -14,6 +14,7 @@ import { generateToken } from "../../common/utilites/security/toke.security.js";
 import { OAuth2Client } from "google-auth-library";
 import { SALT_ROUNDS } from "../../config/config.service.js";
 
+
 export const signUp = async (req, res, next) => {
   const {
     userName,
@@ -26,6 +27,7 @@ export const signUp = async (req, res, next) => {
     phone,
     encryptionMode,
   } = req.body;
+
   if (!userName || userName.split(" ").length < 2) {
     // next(new Error("userName must be at least 2 words"));// error handler using express golbal error handler
     throw new Error("userName must be at least 2 words", { cause: 400 }); // error handler using express golbal error handler
@@ -44,6 +46,7 @@ export const signUp = async (req, res, next) => {
   // Generate 6 digit OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const hashedOtp = hashPassword({ plainText: otp });
+  const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
 
   const emailSent = await sendEmail({
     to: email,
@@ -74,6 +77,7 @@ export const signUp = async (req, res, next) => {
       phone: encryptedPhone,
       encryptionMode: encryptionMode || "symmetric",
       otp: hashedOtp,
+      otpExpiresAt,
     },
   });
   responseSuccess({

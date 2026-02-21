@@ -5,6 +5,7 @@ const checkConnection = async () => {
     await mongoose.connect(process.env.MONGODB_URI, {
       serverSelectionTimeoutMS: 5000,
     });
+    // await mongoose.connection.dropDatabase();
     console.log("Database connected successfully! 😘😘");
   } catch (error) {
     console.log(error);
