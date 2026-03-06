@@ -17,7 +17,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\"userName\" : \"Ahmed Mahmoud\",\r\n\"email\": \"pilot0111@gmail.com\",\r\n\"password\": \"1234567\",\r\n\"cPassword\": \"1234567\",\r\n\"age\": 40,\r\n\"gender\":\"male\",\r\n\"role\": \"admin\",\r\n\"phone\":\"0555136589\",\r\n\"provider\":\"system\",\r\n\"encryptionMode\":\"asymmetric\"\r\n}\r\n",
+              "raw": "{\"userName\" : \"Ahmed Mahmoud\",\r\n// \"email\": \"pilot0111@gmail.com\",\r\n\"password\": \"1234567\",\r\n\"cPassword\": \"1234567\",\r\n\"age\": 40,\r\n// \"gender\":\"male\",\r\n\"role\": \"admin\",\r\n\"phone\":\"0555136589\",\r\n\"provider\":\"system\",\r\n\"encryptionMode\":\"asymmetric\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -39,6 +39,218 @@
           "response": []
         },
         {
+          "name": "Multer Cloudinary",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "userName",
+                  "value": "Ahmed Mahmoud",
+                  "type": "text",
+                  "uuid": "10aaaddd-c2d7-42f0-9ad0-2fc94c2df14f"
+                },
+                {
+                  "key": "email",
+                  "value": "pilot0125@gmail.com",
+                  "type": "text",
+                  "uuid": "fc677281-f1ad-4919-8783-bd38815b268b"
+                },
+                {
+                  "key": "password",
+                  "value": "ahmed1234A",
+                  "type": "text",
+                  "uuid": "e39ac916-b161-4689-8c7f-5ef7e8705fcb"
+                },
+                {
+                  "key": "attachment",
+                  "type": "file",
+                  "uuid": "b651881b-dcd4-4e52-ab19-b623781ecf13",
+                  "src": "/C:/Users/User/Pictures/Camera Roll/IMG-20251121-WA0020.jpg"
+                },
+                {
+                  "key": "attachments",
+                  "type": "file",
+                  "uuid": "a6b6ec8f-8557-4246-8d8c-3c9ee8a78014",
+                  "src": [
+                    "/C:/Users/User/Pictures/Camera Roll/IMG-20251121-WA0024.jpg",
+                    "/C:/Users/User/Pictures/Camera Roll/IMG-20251121-WA0025.jpg"
+                  ],
+                  "disabled": true
+                },
+                {
+                  "key": "cPassword",
+                  "value": "ahmed1234A",
+                  "type": "text",
+                  "uuid": "5224a6bc-89df-42c0-aaa1-345ef75ef1a8"
+                },
+                {
+                  "key": "phone",
+                  "value": "0555136589",
+                  "type": "text",
+                  "uuid": "15a4241a-a48a-4ece-a552-d1523eb0caee"
+                },
+                {
+                  "key": "gender",
+                  "value": "male",
+                  "type": "text",
+                  "uuid": "e983af46-e1a6-4255-aa45-760f241dbb96"
+                },
+                {
+                  "key": "provider",
+                  "value": "system",
+                  "type": "text",
+                  "uuid": "627e4716-17da-41ad-8803-2e7d9722f85c"
+                },
+                {
+                  "key": "role",
+                  "value": "admin",
+                  "type": "text",
+                  "uuid": "269cdf78-4f8d-4bb4-b92f-a545368ed6d6"
+                },
+                {
+                  "key": "encryptionMode",
+                  "value": "symmetric",
+                  "type": "text",
+                  "uuid": "fb2f15bf-5d56-49a8-be69-2e66869b63bf"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:3000/users/multer_cloudinary",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "multer_cloudinary"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Multer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "userName",
+                  "value": "Ahmed Mahmoud",
+                  "type": "text",
+                  "uuid": "10aaaddd-c2d7-42f0-9ad0-2fc94c2df14f"
+                },
+                {
+                  "key": "email",
+                  "value": "pilot0999@gmail.com",
+                  "type": "text",
+                  "uuid": "fc677281-f1ad-4919-8783-bd38815b268b"
+                },
+                {
+                  "key": "password",
+                  "value": "123456",
+                  "type": "text",
+                  "uuid": "e39ac916-b161-4689-8c7f-5ef7e8705fcb"
+                },
+                {
+                  "key": "attachment",
+                  "type": "file",
+                  "uuid": "b651881b-dcd4-4e52-ab19-b623781ecf13",
+                  "src": "/C:/Users/User/Pictures/Camera Roll/IMG-20251121-WA0020.jpg"
+                },
+                {
+                  "key": "attachments",
+                  "type": "file",
+                  "uuid": "a6b6ec8f-8557-4246-8d8c-3c9ee8a78014",
+                  "src": [
+                    "/C:/Users/User/Pictures/Camera Roll/IMG-20251121-WA0024.jpg",
+                    "/C:/Users/User/Pictures/Camera Roll/IMG-20251121-WA0025.jpg"
+                  ],
+                  "disabled": true
+                },
+                {
+                  "key": "cPassword",
+                  "value": "123456",
+                  "type": "text",
+                  "uuid": "5224a6bc-89df-42c0-aaa1-345ef75ef1a8"
+                },
+                {
+                  "key": "phone",
+                  "value": "0555136589",
+                  "type": "text",
+                  "uuid": "15a4241a-a48a-4ece-a552-d1523eb0caee"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:3000/users/multer",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "multer"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Multer Memory",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "userName",
+                  "value": "Ahmed Mahmoud",
+                  "type": "text",
+                  "uuid": "10aaaddd-c2d7-42f0-9ad0-2fc94c2df14f"
+                },
+                {
+                  "key": "email",
+                  "value": "pilot0111@gmail.com",
+                  "type": "text",
+                  "uuid": "fc677281-f1ad-4919-8783-bd38815b268b"
+                },
+                {
+                  "key": "password",
+                  "value": "123456",
+                  "type": "text",
+                  "uuid": "e39ac916-b161-4689-8c7f-5ef7e8705fcb"
+                },
+                {
+                  "key": "attachment",
+                  "type": "file",
+                  "uuid": "17320b33-95a4-4103-acd7-f034f4eaac77",
+                  "src": "/C:/Users/User/Desktop/C45 Full Stack/BackEnd/Assigments/Assigment7/Assignment7.pdf"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:3000/users/multer_memory",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "multer_memory"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Login",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -48,7 +260,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n\"email\": \"pilot0111@gmail.com\",\r\n\"password\": \"1234567\"\r\n}\r\n",
+              "raw": "{\r\n\"email\": \"pilot0125@gmail.com\",\r\n\"password\": \"ahmed1234A\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -130,7 +342,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTgxNWI0OTJkYjhiY2QyNWJmNDRjNyIsImVtYWlsIjoicGlsb3QwMTExQGdtYWlsLmNvbSIsImlhdCI6MTc3MTU3NDc0MH0.oiFLjjINDjMfEHrYFLog33LYJeInxqxCZcVz1rpFFZI",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YWExYzVhZGE5NDk4NzE4MWQ2MmIyNyIsImVtYWlsIjoicGlsb3QwMTI1QGdtYWlsLmNvbSIsIm5iZiI6MTc3Mjc2MTk3MSwiZXhwIjoxNzcyODQ4MzYxLCJhdWQiOiJ1c2VyIiwiaXNzIjoiU2FyYWhhIiwianRpIjoiNGExZTAwODQtZmYyOS00NTA5LTk2YzEtMTdmZWY2YmY5NTg3In0.5LHrnJYCU1Af6F5aM8LnDyCcHBXzvGz_i4U5cad1EC0",
                 "type": "text"
               }
             ],
