@@ -41,7 +41,8 @@ const userSchema = new mongoose.Schema(
       default: genderEnum.male,
       required: true,
     },
-    profilePicture: String,
+    profilePicture: mongoose.Schema.Types.Mixed,
+    coverPictures: [String],
     confirmed: Boolean,
     otp: String, // one time password for email verification
     otpExpiresAt: Date,

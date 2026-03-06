@@ -1,9 +1,12 @@
 import jwt from "jsonwebtoken";
-import { JWT_SECRET_KEY } from "../../../config/config.service.js";
+import { JWT_ACCESS_SECRET } from "../../../config/config.service.js";
 
-export const generateToken = ({ payload, option = {} } = {}) =>{
-    return jwt.sign(payload, JWT_SECRET_KEY, option);
+export const generateToken = ({ payload, signature = JWT_ACCESS_SECRET, options = {} } = {}) =>{
+    if (!signature) {
+        throw new Error("Token signature (secret key) is required");
+    }
+    return jwt.sign(payload, signature, options);
 }
 
-export const verifyToken = ({ token, option = {} } = {}) =>
-  jwt.verify(token, JWT_SECRET_KEY, option);
+export const verifyToken = ({ token, signature = JWT_ACCESS_SECRET, options = {} } = {}) =>
+  jwt.verify(token, signature, options);

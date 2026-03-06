@@ -3,20 +3,21 @@ import { symmetricDecryption } from "../utilites/security/encrypt.security.js";
 import { verifyToken } from "../utilites/security/toke.security.js";
 import * as db_service from "../../DB/models/db.service.js";
 import userModel from "../../DB/models/user.model.js";
+import { JWT_ACCESS_SECRET, PREFIX } from "../../config/config.service.js";
 
 export const authentication = async (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
     throw new Error("token not found", { cause: 401 });
   }
-  if (!authorization.startsWith("Bearer ")) {
+  if (!authorization.startsWith(PREFIX + " ")) {
     throw new Error("invalid token", { cause: 401 });
   }
 const token = authorization.split(" ")[1];
   if (!token) {
     throw new Error("invalid token", { cause: 401 });
   }
-  const decoded = verifyToken({ token: token });
+  const decoded = verifyToken({ token: token, signature: JWT_ACCESS_SECRET });
   if (!decoded || !decoded?.id) {
     throw new Error("invalid token", { cause: 401 });
   }
