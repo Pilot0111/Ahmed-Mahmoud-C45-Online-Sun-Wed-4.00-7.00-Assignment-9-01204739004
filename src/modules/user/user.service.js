@@ -1,15 +1,22 @@
 import { providerEnum } from "../../common/enums/user.enum.js";
-import * as db_service from "../../DB/models/db.service.js";
+import * as db_service from "../../DB/db.service.js";
 import userModel from "../../DB/models/user.model.js";
 import { responseSuccess } from "../../common/utilites/response.success.js";
-import { symmetricEncryption } from "../../common/utilites/security/encrypt.security.js";
+import {
+  symmetricDecryption,
+  symmetricEncryption,
+} from "../../common/utilites/security/encrypt.security.js";
 import {
   comparePassword,
   hashPassword,
 } from "../../common/utilites/security/hash.security.js";
 import { sendEmail } from "../../common/utilites/email/send.email.js";
-import { encryptAsymmetric } from "../../common/utilites/security/asymmetric.security.js";
+import {
+  decryptAsymmetric,
+  encryptAsymmetric,
+} from "../../common/utilites/security/asymmetric.security.js";
 import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "node:crypto";
 import {
   generateToken,
   verifyToken,
@@ -22,6 +29,8 @@ import {
 } from "../../config/config.service.js";
 import cloudinary from "../../common/utilites/cloudnary.js";
 import fs from "node:fs";
+import revokeTokenModel from "../../DB/models/revokeToken.mode.js";
+import { deleteKey, keys, setValue } from "../../DB/redis/redis.service.js";
 
 export const signUp = async (req, res, next) => {
   const {
@@ -176,9 +185,9 @@ export const signUpGmail = async (req, res) => {
       expiresIn: "1d",
       audience: "user",
       issuer: "Saraha",
-      noTimestamp: true,
       notBefore: 10, //in seconds,when the token will be valid
-      jwtid: uuidv4(),
+      // jwtid: uuidv4(),
+      jwtid: randomUUID(),
     },
   });
   responseSuccess({
@@ -309,7 +318,7 @@ export const signIn = async (req, res) => {
     throw new Error("password is incorrect", { cause: 401 });
   }
   // res.status(200).json({ message: "user login successfully", user });
-
+  const jwtid = randomUUID();
   const access_token = generateToken({
     payload: {
       id: user._id,
@@ -320,9 +329,9 @@ export const signIn = async (req, res) => {
       expiresIn: "1d",
       audience: "user",
       issuer: "Saraha",
-      noTimestamp: true,
       notBefore: 10, //in seconds,when the token will be valid
-      jwtid: uuidv4(),
+      // jwtid: uuidv4(),
+      jwtid,
     },
   });
 
@@ -336,9 +345,9 @@ export const signIn = async (req, res) => {
       expiresIn: "7y",
       audience: "user",
       issuer: "Saraha",
-      noTimestamp: true,
       notBefore: 10, //in seconds,when the token will be valid
-      jwtid: uuidv4(),
+      // jwtid: uuidv4(),
+      jwtid,
     },
   });
 
@@ -441,9 +450,9 @@ export const refresh_token = async (req, res) => {
       expiresIn: "1d",
       audience: "user",
       issuer: "Saraha",
-      noTimestamp: true,
       notBefore: 10, //in seconds,when the token will be valid
-      jwtid: uuidv4(),
+      // jwtid: uuidv4(),
+      jwtid: randomUUID(),
     },
   });
 
@@ -452,5 +461,255 @@ export const refresh_token = async (req, res) => {
     status: 200,
     message: "user login successfully",
     data: { access_token },
+  });
+};
+
+export const shareProfile = async (req, res) => {
+  const { id } = req.params;
+  const user = await db_service.findOne({
+    model: userModel,
+    filter: { _id: id },
+    options: { select: "-password -otp -__v" },
+  });
+  if (!user) {
+    throw new Error("user not found", { cause: 404 });
+  }
+
+  // 1. Increment Logic (Fetch -> Calculate -> Update)
+  const currentCount = user.viewCount || 0;
+  await db_service.findOneAndUpdate({
+    model: userModel,
+    filter: { _id: id },
+    update: { viewCount: currentCount + 1 },
+  });
+
+  // 2. Hide viewCount from public response
+  // converting to object ensures we can delete properties effectively if 'user' is a strict mongoose doc
+  const userData = user.toObject ? user.toObject() : user;
+  delete userData.viewCount;
+
+  if (user.encryptionMode === "asymmetric") {
+    userData.phone = decryptAsymmetric(user.phone);
+  } else {
+    userData.phone = symmetricDecryption(user.phone);
+  }
+  responseSuccess({
+    res,
+    status: 200,
+    message: "Profile fetched successfully",
+    data: userData,
+  });
+};
+
+export const getProfileVisits = async (req, res) => {
+  const { id } = req.params;
+  const user = await db_service.findOne({
+    model: userModel,
+    filter: { _id: id },
+    options: { select: "viewCount" },
+  });
+  if (!user) {
+    throw new Error("user not found", { cause: 404 });
+  }
+  responseSuccess({
+    res,
+    status: 200,
+    message: "Profile visits fetched successfully",
+    data: { viewCount: user.viewCount },
+  });
+};
+
+export const updateProfile = async (req, res) => {
+  let { firstName, lastName, phone, gender } = req.body;
+  if (!firstName && !lastName && !phone && !gender) {
+    throw new Error("at least one field is required", { cause: 400 });
+  }
+  console.log(req.user);
+  if (phone) {
+    if (req.user.encryptionMode === "asymmetric") {
+      phone = encryptAsymmetric(phone);
+    } else {
+      phone = symmetricEncryption(phone);
+    }
+  }
+  const updatedUser = await db_service.findOneAndUpdate({
+    model: userModel,
+    filter: { _id: req.user._id },
+    update: { firstName, lastName, phone, gender },
+    options: { select: "-password -otp -__v" },
+  });
+
+  if (updatedUser.encryptionMode === "asymmetric") {
+    updatedUser.phone = decryptAsymmetric(updatedUser.phone);
+  } else {
+    updatedUser.phone = symmetricDecryption(updatedUser.phone);
+  }
+  responseSuccess({
+    res,
+    status: 200,
+    message: "Profile updated successfully",
+    data: updatedUser,
+  });
+};
+
+export const updatePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    throw new Error("oldPassword and newPassword are required", { cause: 400 });
+  }
+
+  const match = comparePassword({
+    PlainText: oldPassword,
+    cipherText: req.user.password,
+  });
+  if (!match) {
+    throw new Error("old password is incorrect", { cause: 401 });
+  }
+  const hashedPassword = hashPassword({ plainText: newPassword });
+  const updatedUser = await db_service.findOneAndUpdate({
+    model: userModel,
+    filter: { _id: req.user._id },
+    update: { password: hashedPassword },
+    options: { select: "-password -otp -__v" },
+  });
+
+  responseSuccess({
+    res,
+    status: 200,
+    message: "Password updated successfully",
+    data: updatedUser,
+  });
+};
+
+export const logout = async (req, res) => {
+  const { flag } = req.query;
+
+  if (flag === "all") {
+    await db_service.findOneAndUpdate({
+      model: userModel,
+      filter: { _id: req.user._id },
+      update: { changeCredentials: new Date() },
+    });
+    // 1. Revoke Token from local DB
+    // await db_service.deleteMany({
+    //   model: revokeTokenModel,
+    //   filter: { userId: req.user._id },
+    // });
+    // 2. Revoke Token from Redis
+    await deleteKey(await keys(`revokeToken::${req.user._id}`));
+    return responseSuccess({
+      res,
+      status: 200,
+      message: "Logged out from all devices successfully",
+    });
+  } else {
+    // 1. Revoke Token from local DB
+    // await db_service.create({
+    //   model: revokeTokenModel,
+    //   date: {
+    //     tokenId: req.decoded.jti,
+    //     userId: req.user._id,
+    //     expiresAt: new Date(req.decoded.exp * 1000),
+    //   },
+    // });
+
+    // 2. Revoke Token from Redis
+    await setValue({
+      key: `revokeToken::${req.user._id}::${req.decoded.jti}`,
+      value: `${req.decoded.jti}`,
+      ttl: req.decoded.exp - Math.floor(Date.now() / 1000),
+    });
+    return responseSuccess({
+      res,
+      status: 200,
+      message: "Logged out from this device successfully",
+    });
+  }
+};
+
+export const uploadCoverPicture = async (req, res, next) => {
+  const files = req.files?.attachments;
+  if (!files || files.length === 0) {
+    throw new Error("file is required", { cause: 400 });
+  }
+
+  // 1. Prepare the new list of cover pictures
+  const existingCovers = req.user.coverPictures || [];
+  const newPaths = files.map((file) => file.path);
+  const finalCoverPictures = [...existingCovers, ...newPaths];
+
+  // 2. Validate limit
+  if (finalCoverPictures.length > 2) {
+    for (const file of files) {
+      if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
+    }
+    throw new Error(
+      `Total cover pictures cannot exceed 2. Existing: ${existingCovers.length}, New: ${files.length}`,
+      { cause: 400 },
+    );
+  }
+  const updatedUser = await db_service.findOneAndUpdate({
+    model: userModel,
+    filter: { _id: req.user._id },
+    update: { coverPictures: finalCoverPictures },
+    options: { select: "-password -otp -__v", returnDocument: "after" },
+  });
+  responseSuccess({
+    res,
+    status: 200,
+    message: "Cover pictures uploaded successfully",
+    data: updatedUser,
+  });
+};
+
+export const uploadProfilePicture = async (req, res, next) => {
+  const file = req.file;
+  if (!file) {
+    throw new Error("file is required", { cause: 400 });
+  }
+  const currentGallery = req.user.gallery ? [...req.user.gallery] : [];
+  if (req.user.profilePicture) {
+    currentGallery.push(req.user.profilePicture);
+  }
+  const updatedUser = await db_service.findOneAndUpdate({
+    model: userModel,
+    filter: { _id: req.user._id },
+    update: { profilePicture: file.path, gallery: currentGallery },
+    options: { select: "-password -otp -__v", returnDocument: "after" },
+  });
+
+  responseSuccess({
+    res,
+    status: 200,
+    message: "Profile picture uploaded successfully",
+    data: updatedUser,
+  });
+};
+
+export const deleteProfilePicture = async (req, res, next) => {
+  if (!req.user.profilePicture) {
+    throw new Error("No profile picture to delete", { cause: 404 });
+  }
+
+  if (
+    typeof req.user.profilePicture === "string" &&
+    fs.existsSync(req.user.profilePicture)
+  ) {
+    fs.unlinkSync(req.user.profilePicture);
+  }
+
+  const updatedUser = await db_service.findOneAndUpdate({
+    model: userModel,
+    filter: { _id: req.user._id },
+    update: { profilePicture: null },
+    options: { select: "-password -otp -__v", returnDocument: "after" },
+  });
+
+  responseSuccess({
+    res,
+    status: 200,
+    message: "Profile picture deleted successfully",
+    data: updatedUser,
   });
 };

@@ -5,12 +5,14 @@ import userRouter from "./modules/user/user.controller.js";
 const app = express();
 const port = PORT;
 import cors from "cors";
+import { connectRedis, redisClient } from "./DB/redis/redis.db.js";
 const bootsrap = async (req, res) => {
   app.use(cors(), express.json());
   app.get("/", (req, res) => {
     res.status(200).json("Welome to Saraha App!");
   });
   checkConnection();
+  connectRedis();
   app.use( "/uploads", express.static("uploads"));
   app.use("/users", userRouter);
   app.use("{/*demo}", (req, res, next) => {

@@ -1,4 +1,4 @@
-import { providerEnum } from "../../common/enums/user.enum.js";
+import { providerEnum } from "../common/enums/user.enum.js";
 
 export const create = async ({ model, date }={}) => {
     return await model.create(date);
@@ -51,6 +51,17 @@ export const updateOne = async ({ model, filter={},update={},options={} }={}) =>
 };
 
 export const findOneAndUpdate = async ({ model, filter={},update={},options={} }={}) => {
-    const doc = model.findOneAndUpdate(filter,update, { new: true , runValidators: true,...options});
+    const doc = model.findOneAndUpdate(filter,update, { returnDocument: "after" , runValidators: true,...options});
    return await doc.exec();
 };
+
+export const deleteOne = async ({ model, filter={} }={}) => {
+    const doc = model.deleteOne(filter);
+   return await doc.exec();
+};
+
+export const deleteMany = async ({ model, filter={} }={}) => {
+    const doc = model.deleteMany(filter);
+   return await doc.exec();
+    
+}

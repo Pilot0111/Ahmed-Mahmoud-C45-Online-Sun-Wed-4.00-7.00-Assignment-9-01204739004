@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
-import {  roleEnum, genderEnum, providerEnum, encryptionModeEnum } from "../../common/enums/user.enum.js";
+import {
+  roleEnum,
+  genderEnum,
+  providerEnum,
+  encryptionModeEnum,
+} from "../../common/enums/user.enum.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -43,6 +48,7 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: mongoose.Schema.Types.Mixed,
     coverPictures: [String],
+    gallery: [mongoose.Schema.Types.Mixed],
     confirmed: Boolean,
     otp: String, // one time password for email verification
     otpExpiresAt: Date,
@@ -52,17 +58,23 @@ const userSchema = new mongoose.Schema(
       default: providerEnum.system,
       required: true,
     },
-    role : {
+    role: {
       type: String,
       enum: Object.values(roleEnum),
       default: roleEnum.user,
     },
+    changeCredentials: Date,
+    confirmed: Boolean,
     encryptionMode: {
       type: String,
       enum: Object.values(encryptionModeEnum),
       default: encryptionModeEnum.symmetric,
     },
     phone: String,
+    viewCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

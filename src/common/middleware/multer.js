@@ -31,6 +31,25 @@ const upload = multer({ storage, fileFilter });
 return upload;
 }
 
+export const multerErrorHandler = (multerMiddleware) => {
+  return (req, res, next) => {
+    multerMiddleware(req, res, (err) => {
+      if (err) {
+        if (err.code === "LIMIT_UNEXPECTED_FILE") {
+          return next(
+            new Error(
+              `Upload failed: Too many files for field '${err.field}' or incorrect field name.`,
+              { cause: 400 }
+            )
+          );
+        }
+        return next(new Error(err.message, { cause: 400 }));
+      }
+      next();
+    });
+  };
+};
+
 export const multer_memory = () => {
 
 const storage = multer.memoryStorage();

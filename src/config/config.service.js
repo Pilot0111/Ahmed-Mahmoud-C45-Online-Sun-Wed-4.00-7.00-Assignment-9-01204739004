@@ -18,3 +18,6 @@ export const PREFIX = process.env.PREFIX;
 export const SALT_ROUNDS = process.env.SALT_ROUNDS;
 export const PUBLIC_KEY = process.env.PUBLIC_KEY;
 export const PRIVATE_KEY = process.env.PRIVATE_KEY;
+
+export const REDIS_URL = process.env.REDIS_URL;
+

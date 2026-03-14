@@ -1,4 +1,5 @@
 import joi from "joi";
+import { Types } from "mongoose";
 
 export const general_rules = {
   email: joi.string().email({
@@ -14,7 +15,11 @@ export const general_rules = {
       "any.required": "password is required",
     }),
   cPassword: joi.string().valid(joi.ref("password")),
-
+  //   id: joi.string().length(24).hex(),// fixed vlaue
+  id: joi.string().custom((value, helpers) => {
+    const isValid = Types.ObjectId.isValid(value);
+    return isValid ? value : helpers.message("invalid id");
+  }),
   file: joi
     .object({
       fieldname: joi.string().required(),
