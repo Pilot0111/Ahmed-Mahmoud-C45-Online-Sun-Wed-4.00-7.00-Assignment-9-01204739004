@@ -30,7 +30,7 @@ import {
 import cloudinary from "../../common/utilites/cloudnary.js";
 import fs from "node:fs";
 import revokeTokenModel from "../../DB/models/revokeToken.mode.js";
-import { deleteKey, keys, setValue } from "../../DB/redis/redis.service.js";
+import { deleteKey, get, keys, setValue } from "../../DB/redis/redis.service.js";
 
 export const signUp = async (req, res, next) => {
   const {
@@ -393,6 +393,17 @@ export const getProfile = async (req, res, next) => {
   //   token: authorization
   // }); now using middleware
 
+  const key = `profile::${req.user._id}`;
+  const userExists = await get({ key });
+  if (userExists) {
+    return responseSuccess({
+      res,
+      status: 200,
+      message: "Profile fetched successfully",
+      data: userExists,
+    });
+  }
+ await setValue({ key, value: req.user, ttl: 60 });
   responseSuccess({
     res,
     status: 200,
@@ -544,6 +555,7 @@ export const updateProfile = async (req, res) => {
   } else {
     updatedUser.phone = symmetricDecryption(updatedUser.phone);
   }
+  await deleteKey(`profile::${req.user._id}`) //delete cache so that it gets updated
   responseSuccess({
     res,
     status: 200,

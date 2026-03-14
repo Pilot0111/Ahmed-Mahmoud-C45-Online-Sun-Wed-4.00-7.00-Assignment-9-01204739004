@@ -17,7 +17,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\"userName\" : \"Ahmed Mahmoud\",\r\n// \"email\": \"pilot0111@gmail.com\",\r\n\"password\": \"1234567\",\r\n\"cPassword\": \"1234567\",\r\n\"age\": 40,\r\n// \"gender\":\"male\",\r\n\"role\": \"admin\",\r\n\"phone\":\"0555136589\",\r\n\"provider\":\"system\",\r\n\"encryptionMode\":\"asymmetric\"\r\n}\r\n",
+              "raw": "{\"userName\" : \"Ahmed Mahmoud\",\r\n\"email\": \"pilot0126@gmail.com\",\r\n\"password\": \"ahmed1234A\",\r\n\"cPassword\": \"ahmed1234A\",\r\n\"age\": 40,\r\n\"gender\":\"male\",\r\n\"role\": \"admin\",\r\n\"phone\":\"0555136589\",\r\n\"provider\":\"system\",\r\n\"encryptionMode\":\"asymmetric\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -133,7 +133,7 @@
           "response": []
         },
         {
-          "name": "Multer",
+          "name": "signup Multer_local",
           "request": {
             "method": "POST",
             "header": [],
@@ -148,35 +148,31 @@
                 },
                 {
                   "key": "email",
-                  "value": "pilot0999@gmail.com",
+                  "value": "pilot0129@gmail.com",
                   "type": "text",
                   "uuid": "fc677281-f1ad-4919-8783-bd38815b268b"
                 },
                 {
                   "key": "password",
-                  "value": "123456",
+                  "value": "123456A",
                   "type": "text",
                   "uuid": "e39ac916-b161-4689-8c7f-5ef7e8705fcb"
                 },
                 {
                   "key": "attachment",
                   "type": "file",
-                  "uuid": "b651881b-dcd4-4e52-ab19-b623781ecf13",
-                  "src": "/C:/Users/User/Pictures/Camera Roll/IMG-20251121-WA0020.jpg"
+                  "uuid": "a6b6ec8f-8557-4246-8d8c-3c9ee8a78014",
+                  "src": "/C:/Users/User/Desktop/C45 Full Stack/FrontEnd/Session5/Ahmed-Mahmoud-C45-Online-Mon&Thu-5.30-8.30-Assignment4-01204739004/images/about.jpg"
                 },
                 {
                   "key": "attachments",
                   "type": "file",
-                  "uuid": "a6b6ec8f-8557-4246-8d8c-3c9ee8a78014",
-                  "src": [
-                    "/C:/Users/User/Pictures/Camera Roll/IMG-20251121-WA0024.jpg",
-                    "/C:/Users/User/Pictures/Camera Roll/IMG-20251121-WA0025.jpg"
-                  ],
-                  "disabled": true
+                  "uuid": "b90eeb20-97ff-441d-8dd4-8347bc339d1d",
+                  "src": "/C:/Users/User/Desktop/C45 Full Stack/FrontEnd/Session5/Ahmed-Mahmoud-C45-Online-Mon&Thu-5.30-8.30-Assignment4-01204739004/images/feedback.jpg"
                 },
                 {
                   "key": "cPassword",
-                  "value": "123456",
+                  "value": "123456A",
                   "type": "text",
                   "uuid": "5224a6bc-89df-42c0-aaa1-345ef75ef1a8"
                 },
@@ -185,18 +181,191 @@
                   "value": "0555136589",
                   "type": "text",
                   "uuid": "15a4241a-a48a-4ece-a552-d1523eb0caee"
+                },
+                {
+                  "key": "gender",
+                  "value": "male",
+                  "type": "text",
+                  "uuid": "610d8a5d-18bf-4940-b464-f253775625e2"
+                },
+                {
+                  "key": "provider",
+                  "value": "system",
+                  "type": "text",
+                  "uuid": "f2cd81bc-1d2b-4e20-8de8-3b9d36a83a9b"
+                },
+                {
+                  "key": "role",
+                  "value": "admin",
+                  "type": "text",
+                  "uuid": "0f27bcaf-3952-4059-b06b-177301758e5d"
+                },
+                {
+                  "key": "encryptionMode",
+                  "value": "asymmetric",
+                  "type": "text",
+                  "uuid": "e4c41167-94db-41b0-abb2-cb69e203b148"
                 }
               ]
             },
             "url": {
-              "raw": "localhost:3000/users/multer",
+              "raw": "localhost:3000/users/signup/multer_local",
               "host": [
                 "localhost"
               ],
               "port": "3000",
               "path": [
                 "users",
-                "multer"
+                "signup",
+                "multer_local"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"email\": \"pilot0129@gmail.com\",\r\n\"password\": \"123456A\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/signin?x=20",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "signin"
+              ],
+              "query": [
+                {
+                  "key": "x",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload cover Picture",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjMyMGJjYjYxZDJjNGU2N2Y4ZjAxMCIsImVtYWlsIjoicGlsb3QwMTI5QGdtYWlsLmNvbSIsImlhdCI6MTc3MzM0NzI3MCwibmJmIjoxNzczMzQ3MjgwLCJleHAiOjE3NzM0MzM2NzAsImF1ZCI6InVzZXIiLCJpc3MiOiJTYXJhaGEiLCJqdGkiOiJhOWZjMDZjZC0zYWNmLTQ5OTYtOTBhNS0wMTg5MGQ2MjhkYTkifQ.-oBl2vIwZKRX1DxND1KEI42bOPsbHEz7nOp6ZIVGuvk",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "attachments",
+                  "type": "file",
+                  "uuid": "b90eeb20-97ff-441d-8dd4-8347bc339d1d",
+                  "src": "/C:/Users/User/Desktop/C45 Full Stack/FrontEnd/Session5/Ahmed-Mahmoud-C45-Online-Mon&Thu-5.30-8.30-Assignment4-01204739004/images/hero img.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:3000/users/upload-cover-picture",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "upload-cover-picture"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload profile Picture",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjMyMGJjYjYxZDJjNGU2N2Y4ZjAxMCIsImVtYWlsIjoicGlsb3QwMTI5QGdtYWlsLmNvbSIsImlhdCI6MTc3MzM0NzI3MCwibmJmIjoxNzczMzQ3MjgwLCJleHAiOjE3NzM0MzM2NzAsImF1ZCI6InVzZXIiLCJpc3MiOiJTYXJhaGEiLCJqdGkiOiJhOWZjMDZjZC0zYWNmLTQ5OTYtOTBhNS0wMTg5MGQ2MjhkYTkifQ.-oBl2vIwZKRX1DxND1KEI42bOPsbHEz7nOp6ZIVGuvk",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "attachment",
+                  "type": "file",
+                  "uuid": "a6b6ec8f-8557-4246-8d8c-3c9ee8a78014",
+                  "src": "/C:/Users/User/Desktop/C45 Full Stack/FrontEnd/Session5/Ahmed-Mahmoud-C45-Online-Mon&Thu-5.30-8.30-Assignment4-01204739004/images/blog/12.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:3000/users/upload-profile-picture",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "upload-profile-picture"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete profile Picture",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjMyMGJjYjYxZDJjNGU2N2Y4ZjAxMCIsImVtYWlsIjoicGlsb3QwMTI5QGdtYWlsLmNvbSIsImlhdCI6MTc3MzM0NzI3MCwibmJmIjoxNzczMzQ3MjgwLCJleHAiOjE3NzM0MzM2NzAsImF1ZCI6InVzZXIiLCJpc3MiOiJTYXJhaGEiLCJqdGkiOiJhOWZjMDZjZC0zYWNmLTQ5OTYtOTBhNS0wMTg5MGQ2MjhkYTkifQ.-oBl2vIwZKRX1DxND1KEI42bOPsbHEz7nOp6ZIVGuvk",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "attachment",
+                  "type": "file",
+                  "uuid": "a6b6ec8f-8557-4246-8d8c-3c9ee8a78014",
+                  "src": [
+                    "/C:/Users/User/Desktop/C45 Full Stack/FrontEnd/Session5/Ahmed-Mahmoud-C45-Online-Mon&Thu-5.30-8.30-Assignment4-01204739004/images/blog/12.jpg",
+                    "/C:/Users/User/Desktop/C45 Full Stack/FrontEnd/Session5/Ahmed-Mahmoud-C45-Online-Mon&Thu-5.30-8.30-Assignment4-01204739004/images/blog/32.jpg"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:3000/users/delete-profile-picture",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "delete-profile-picture"
               ]
             }
           },
@@ -251,7 +420,7 @@
           "response": []
         },
         {
-          "name": "Login",
+          "name": "Share Profile",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
@@ -260,7 +429,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n\"email\": \"pilot0125@gmail.com\",\r\n\"password\": \"ahmed1234A\"\r\n}\r\n",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -268,19 +437,20 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/users/signin?x=20",
+              "raw": "localhost:3000/users/share-profile/:id",
               "host": [
                 "localhost"
               ],
               "port": "3000",
               "path": [
                 "users",
-                "signin"
+                "share-profile",
+                ":id"
               ],
-              "query": [
+              "variable": [
                 {
-                  "key": "x",
-                  "value": "20"
+                  "key": "id",
+                  "value": "69b320bcb61d2c4e67f8f010"
                 }
               ]
             }
@@ -342,7 +512,7 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YWExYzVhZGE5NDk4NzE4MWQ2MmIyNyIsImVtYWlsIjoicGlsb3QwMTI1QGdtYWlsLmNvbSIsIm5iZiI6MTc3Mjc2MTk3MSwiZXhwIjoxNzcyODQ4MzYxLCJhdWQiOiJ1c2VyIiwiaXNzIjoiU2FyYWhhIiwianRpIjoiNGExZTAwODQtZmYyOS00NTA5LTk2YzEtMTdmZWY2YmY5NTg3In0.5LHrnJYCU1Af6F5aM8LnDyCcHBXzvGz_i4U5cad1EC0",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YWI4NWFhMjhkM2U1ZGRjZGM0OTQ5MiIsImVtYWlsIjoicGlsb3QwMTI1QGdtYWlsLmNvbSIsIm5iZiI6MTc3Mjg0ODU3NiwiZXhwIjoxNzcyOTM0OTY2LCJhdWQiOiJ1c2VyIiwiaXNzIjoiU2FyYWhhIiwianRpIjoiOGVjMjVkMGYtNWZjOC00ZTQxLTlhNjktZGYzZjA2ZTNkOWEzIn0.zbN7XqnjtjJfk6d_bWLHeYQ8z58TGmPoXlrN10ECARg",
                 "type": "text"
               }
             ],
@@ -376,13 +546,13 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ODVmZjhiYTYwYWI4ZGI5Zjc4M2MzMCIsImlzTG9nZ2VkSW4iOnRydWUsImlhdCI6MTc3MDM4OTM5MiwiZXhwIjoxNzcwMzkyOTkyfQ.Om-HeFq0G3KMbPrUVx2F0EDsG-_6vDMC-KSY2ihg_qs",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YWI4NWFhMjhkM2U1ZGRjZGM0OTQ5MiIsImVtYWlsIjoicGlsb3QwMTI1QGdtYWlsLmNvbSIsIm5iZiI6MTc3Mjg0ODU3NiwiZXhwIjoxNzcyOTM0OTY2LCJhdWQiOiJ1c2VyIiwiaXNzIjoiU2FyYWhhIiwianRpIjoiOGVjMjVkMGYtNWZjOC00ZTQxLTlhNjktZGYzZjA2ZTNkOWEzIn0.zbN7XqnjtjJfk6d_bWLHeYQ8z58TGmPoXlrN10ECARg",
                 "type": "text"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"AHmed Mahmoud Omar\",\r\n\"email\": \"pilot01112@gmail.com\",\r\n\"age\":45\r\n}\r\n",
+              "raw": "{\r\n \"firstName\": \"Mostafa\",\r\n \"lastName\": \"Alii\",\r\n \"phone\": \"0555113622\",\r\n \"gender\": \"male\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -390,13 +560,85 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/users",
+              "raw": "localhost:3000/users/update-profile",
               "host": [
                 "localhost"
               ],
               "port": "3000",
               "path": [
-                "users"
+                "users",
+                "update-profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update loged-in user password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YWI4NWFhMjhkM2U1ZGRjZGM0OTQ5MiIsImVtYWlsIjoicGlsb3QwMTI1QGdtYWlsLmNvbSIsIm5iZiI6MTc3MzA3MTEzMCwiZXhwIjoxNzczMTU3NTIwLCJhdWQiOiJ1c2VyIiwiaXNzIjoiU2FyYWhhIiwianRpIjoiZjA4ODRlMDItMzNmNy00NWU2LWEwZDAtYjIxODA0NmY2ZDI4In0.q5evtY1Z4Sm-46TOqNLxjKoXjT4SXYRwQMnaMif9F4I",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"oldPassword\": \"ahmed1234B\",\r\n \"newPassword\": \"ahmed1234A\",\r\n \"cPassword\": \"ahmed1234A\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/update-password",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "update-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logout loged-in user",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YjMyMGJjYjYxZDJjNGU2N2Y4ZjAxMCIsImVtYWlsIjoicGlsb3QwMTI5QGdtYWlsLmNvbSIsImlhdCI6MTc3MzQ1NzI3NiwibmJmIjoxNzczNDU3Mjg2LCJleHAiOjE3NzM1NDM2NzYsImF1ZCI6InVzZXIiLCJpc3MiOiJTYXJhaGEiLCJqdGkiOiIzNTNiNjIwOC04NzViLTQ2YjgtYmI2YS1kMjc4YTQ1OWNkZWIifQ.5pwOpWQVi6lJwOX0I2kLqmSf_XrKO9IX92BPc2o5_iI",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/logout",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "logout"
               ]
             }
           },
