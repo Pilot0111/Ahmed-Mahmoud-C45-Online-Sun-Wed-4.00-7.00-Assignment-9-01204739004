@@ -65,14 +65,13 @@ export const signInSchema = {
     .required(),
 };
 
-
 export const shareProfileSchema = {
   params: joi
     .object({
       id: general_rules.id.required(),
     })
     .required(),
-}
+};
 
 export const updateProfileSchema = {
   body: joi
@@ -83,7 +82,7 @@ export const updateProfileSchema = {
       gender: joi.string().valid(...Object.values(genderEnum)),
     })
     .required(),
-}
+};
 
 export const updatePasswordSchema = {
   body: joi
@@ -93,4 +92,57 @@ export const updatePasswordSchema = {
       cPassword: joi.string().valid(joi.ref("newPassword")).required(),
     })
     .required(),
-}
+};
+
+export const confirmEmailSchema = {
+  body: joi
+    .object({
+      email: general_rules.email.required(),
+      code: joi.string().length(6).required(),
+    })
+    .required(),
+};
+
+export const resendOtpSchema = {
+  body: joi
+    .object({
+      email: general_rules.email.required(),
+    })
+    .required(),
+};
+
+export const confirm2SVSchema = {
+  body: joi
+    .object({
+      code: joi.string().length(6).required(),
+    })
+    .required(),
+};
+
+export const confirmLogin2SVSchema = {
+  body: joi
+    .object({
+      email: general_rules.email.required(),
+      code: joi.string().length(6).required(),
+    })
+    .required(),
+};
+
+export const forgetPasswordSchema = {
+  body: joi
+    .object({
+      email: general_rules.email.required(),
+    })
+    .required(),
+};
+
+export const resetPasswordSchema = {
+  body: joi
+    .object({
+      email: general_rules.email.required(),
+      code: joi.string().length(6).required(),
+      newPassword: general_rules.password.required(),
+      cPassword: joi.string().valid(joi.ref("newPassword")).required(),
+    })
+    .required(),
+};

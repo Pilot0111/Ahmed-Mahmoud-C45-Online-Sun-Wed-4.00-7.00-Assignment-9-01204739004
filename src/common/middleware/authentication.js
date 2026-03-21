@@ -5,7 +5,7 @@ import * as db_service from "../../DB/db.service.js";
 import userModel from "../../DB/models/user.model.js";
 import { JWT_ACCESS_SECRET, PREFIX } from "../../config/config.service.js";
 import revokeTokenModel from "../../DB/models/revokeToken.mode.js";
-import { get } from "../../DB/redis/redis.service.js";
+import { generateRevokeTokenKey, get } from "../../DB/redis/redis.service.js";
 
 export const authentication = async (req, res, next) => {
   const { authorization } = req.headers;
@@ -52,7 +52,7 @@ export const authentication = async (req, res, next) => {
   //   filter: { tokenId: decoded.jti },
   // });
   // revoke token check for redis
-  const revokeToken = await get({ key: `revokeToken::${user._id}::${decoded.jti}` });
+  const revokeToken = await get({ key: generateRevokeTokenKey(user._id, decoded.jti) });
   
   if (revokeToken) {
     throw new Error("token revoked", { cause: 401 });

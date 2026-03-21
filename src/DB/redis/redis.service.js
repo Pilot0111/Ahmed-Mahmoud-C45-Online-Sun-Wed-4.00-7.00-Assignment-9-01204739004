@@ -1,10 +1,22 @@
 import { redisClient } from "./redis.db.js";
 
+export const generateOtpKey = (email) => `otp::${email}`;
+export const max_Otp_tries = (email) => `otp::${email}::MaxOtptries`;
+export const block_key_otp = (email) => `otp::${email}::block`;
+
+export const max_login_tries = (email) => `login::${email}::MaxLoginTries`;
+export const block_key_login = (email) => `login::${email}::block`;
+
+export const generate2SVOtpKey = (email) => `2sv::${email}`;
+export const generateForgetPasswordOtpKey = (email) => `forgetPassword::${email}`;
+export const generateRevokeTokenKey = (userId, jti) => jti ? `revokeToken::${userId}::${jti}` : `revokeToken::${userId}`;
+export const generateProfileKey = (userId) => `profile::${userId}`;
+
 export const setValue = async ({ key, value, ttl } = {}) => {
   try {
     const data = typeof value === "string" ? value : JSON.stringify(value);
     return ttl
-      ? await redisClient.set(key, data, "EX", ttl)
+      ? await redisClient.set(key, data, { EX: ttl })
       : await redisClient.set(key, data);
   } catch (error) {
     console.log("Redis set failed!", error);
@@ -79,5 +91,13 @@ export const expire = async ({  key, ttl } = {}) => {
     return await redisClient.expire(key, ttl);
   } catch (error) {
     console.log("Redis expire failed!", error);
+  }
+};
+
+export const increment = async (key) => {
+  try {
+    return await redisClient.incr(key);
+  } catch (error) {
+    console.log("Redis incr failed!", error);
   }
 };

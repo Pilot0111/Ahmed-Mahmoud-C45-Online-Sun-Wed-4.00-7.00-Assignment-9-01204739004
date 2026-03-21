@@ -30,6 +30,50 @@ userRouter.post(
   validation(UV.signUpSchema),
   US.signUp,
 );
+
+userRouter.patch(
+  "/confirm_email",
+  validation(UV.confirmEmailSchema),
+  US.confirmEmail
+)
+
+userRouter.patch(
+  "/resend_otp",
+  validation(UV.resendOtpSchema),
+  US.resendOtp
+)
+
+userRouter.post(
+  "/forget-password",
+  validation(UV.forgetPasswordSchema),
+  US.forgetPassword
+);
+
+userRouter.patch(
+  "/reset-password",
+  validation(UV.resetPasswordSchema),
+  US.resetPassword
+);
+
+userRouter.patch(
+  "/enable-2sv/request",
+  authentication,
+  US.requestEnable2SV
+);
+
+userRouter.patch(
+  "/enable-2sv/confirm",
+  authentication,
+  validation(UV.confirm2SVSchema),
+  US.confirmEnable2SV
+);
+
+userRouter.post(
+  "/signin/confirm-2sv",
+  validation(UV.confirmLogin2SVSchema),
+  US.confirmLogin2SV
+);
+
 userRouter.post(
   "/multer_memory",
   multer_memory().single("attachment"),

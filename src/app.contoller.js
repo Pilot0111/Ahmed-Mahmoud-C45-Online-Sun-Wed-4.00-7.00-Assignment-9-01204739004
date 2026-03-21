@@ -6,6 +6,7 @@ const app = express();
 const port = PORT;
 import cors from "cors";
 import { connectRedis, redisClient } from "./DB/redis/redis.db.js";
+import { deleteUnconfirmedUsersCron } from "./common/utilites/cron/deleteUnconfirmed.cron.js";
 const bootsrap = async (req, res) => {
   app.use(cors(), express.json());
   app.get("/", (req, res) => {
@@ -13,6 +14,7 @@ const bootsrap = async (req, res) => {
   });
   checkConnection();
   connectRedis();
+  deleteUnconfirmedUsersCron();
   app.use( "/uploads", express.static("uploads"));
   app.use("/users", userRouter);
   app.use("{/*demo}", (req, res, next) => {

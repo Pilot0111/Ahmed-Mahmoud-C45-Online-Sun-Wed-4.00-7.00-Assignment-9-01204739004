@@ -133,6 +133,54 @@
           "response": []
         },
         {
+          "name": "Multer Memory",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "userName",
+                  "value": "Ahmed Mahmoud",
+                  "type": "text",
+                  "uuid": "10aaaddd-c2d7-42f0-9ad0-2fc94c2df14f"
+                },
+                {
+                  "key": "email",
+                  "value": "pilot0111@gmail.com",
+                  "type": "text",
+                  "uuid": "fc677281-f1ad-4919-8783-bd38815b268b"
+                },
+                {
+                  "key": "password",
+                  "value": "123456",
+                  "type": "text",
+                  "uuid": "e39ac916-b161-4689-8c7f-5ef7e8705fcb"
+                },
+                {
+                  "key": "attachment",
+                  "type": "file",
+                  "uuid": "17320b33-95a4-4103-acd7-f034f4eaac77",
+                  "src": "/C:/Users/User/Desktop/C45 Full Stack/BackEnd/Assigments/Assigment7/Assignment7.pdf"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:3000/users/multer_memory",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "multer_memory"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "signup Multer_local",
           "request": {
             "method": "POST",
@@ -148,7 +196,7 @@
                 },
                 {
                   "key": "email",
-                  "value": "pilot0129@gmail.com",
+                  "value": "pilot0111@gmail.com",
                   "type": "text",
                   "uuid": "fc677281-f1ad-4919-8783-bd38815b268b"
                 },
@@ -157,6 +205,12 @@
                   "value": "123456A",
                   "type": "text",
                   "uuid": "e39ac916-b161-4689-8c7f-5ef7e8705fcb"
+                },
+                {
+                  "key": "cPassword",
+                  "value": "123456A",
+                  "type": "text",
+                  "uuid": "5224a6bc-89df-42c0-aaa1-345ef75ef1a8"
                 },
                 {
                   "key": "attachment",
@@ -169,12 +223,6 @@
                   "type": "file",
                   "uuid": "b90eeb20-97ff-441d-8dd4-8347bc339d1d",
                   "src": "/C:/Users/User/Desktop/C45 Full Stack/FrontEnd/Session5/Ahmed-Mahmoud-C45-Online-Mon&Thu-5.30-8.30-Assignment4-01204739004/images/feedback.jpg"
-                },
-                {
-                  "key": "cPassword",
-                  "value": "123456A",
-                  "type": "text",
-                  "uuid": "5224a6bc-89df-42c0-aaa1-345ef75ef1a8"
                 },
                 {
                   "key": "phone",
@@ -224,6 +272,179 @@
           "response": []
         },
         {
+          "name": "Confirm Email",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"pilot0111@gmail.com\",\r\n    \"code\": \"814297\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/confirm_email",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "confirm_email"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"pilot0111@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/resend_otp",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "resend_otp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enable 2-step verification",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YmJjZjU0NDMyZTgxOTQ3OGI0N2NkZSIsImVtYWlsIjoicGlsb3QwMTExQGdtYWlsLmNvbSIsImlhdCI6MTc3NDA1NzU3OSwibmJmIjoxNzc0MDU3NTg5LCJleHAiOjE3NzQxNDM5NzksImF1ZCI6InVzZXIiLCJpc3MiOiJTYXJhaGEiLCJqdGkiOiJiY2FiZjViYS0yYTgxLTQwYmYtYmIwMi0zMTRkY2UwNzQyYjkifQ.aXfKFimFj5sWnBZtpZj0ALcu6UWPm_No8itXGqTZU1A",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"pilot0111@gmail.com\",\r\n    \"code\": \"783950\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/enable-2sv/request",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "enable-2sv",
+                "request"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Enable 2-step ver",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YmJjZjU0NDMyZTgxOTQ3OGI0N2NkZSIsImVtYWlsIjoicGlsb3QwMTExQGdtYWlsLmNvbSIsImlhdCI6MTc3NDA1NzU3OSwibmJmIjoxNzc0MDU3NTg5LCJleHAiOjE3NzQxNDM5NzksImF1ZCI6InVzZXIiLCJpc3MiOiJTYXJhaGEiLCJqdGkiOiJiY2FiZjViYS0yYTgxLTQwYmYtYmIwMi0zMTRkY2UwNzQyYjkifQ.aXfKFimFj5sWnBZtpZj0ALcu6UWPm_No8itXGqTZU1A",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"code\": \"661518\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/enable-2sv/confirm",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "enable-2sv",
+                "confirm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "sign-In 2SV user",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YmJjZjU0NDMyZTgxOTQ3OGI0N2NkZSIsImVtYWlsIjoicGlsb3QwMTExQGdtYWlsLmNvbSIsImlhdCI6MTc3NDA1NzU3OSwibmJmIjoxNzc0MDU3NTg5LCJleHAiOjE3NzQxNDM5NzksImF1ZCI6InVzZXIiLCJpc3MiOiJTYXJhaGEiLCJqdGkiOiJiY2FiZjViYS0yYTgxLTQwYmYtYmIwMi0zMTRkY2UwNzQyYjkifQ.aXfKFimFj5sWnBZtpZj0ALcu6UWPm_No8itXGqTZU1A",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"pilot0111@gmail.com\",\r\n    \"code\": \"662218\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/enable-2sv/confirm",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "enable-2sv",
+                "confirm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Login",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
@@ -233,7 +454,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n\"email\": \"pilot0129@gmail.com\",\r\n\"password\": \"123456A\"\r\n}\r\n",
+              "raw": "{\r\n\"email\": \"pilot0111@gmail.com\",\r\n\"password\": \"123456A\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -366,54 +587,6 @@
               "path": [
                 "users",
                 "delete-profile-picture"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Multer Memory",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "userName",
-                  "value": "Ahmed Mahmoud",
-                  "type": "text",
-                  "uuid": "10aaaddd-c2d7-42f0-9ad0-2fc94c2df14f"
-                },
-                {
-                  "key": "email",
-                  "value": "pilot0111@gmail.com",
-                  "type": "text",
-                  "uuid": "fc677281-f1ad-4919-8783-bd38815b268b"
-                },
-                {
-                  "key": "password",
-                  "value": "123456",
-                  "type": "text",
-                  "uuid": "e39ac916-b161-4689-8c7f-5ef7e8705fcb"
-                },
-                {
-                  "key": "attachment",
-                  "type": "file",
-                  "uuid": "17320b33-95a4-4103-acd7-f034f4eaac77",
-                  "src": "/C:/Users/User/Desktop/C45 Full Stack/BackEnd/Assigments/Assigment7/Assignment7.pdf"
-                }
-              ]
-            },
-            "url": {
-              "raw": "localhost:3000/users/multer_memory",
-              "host": [
-                "localhost"
-              ],
-              "port": "3000",
-              "path": [
-                "users",
-                "multer_memory"
               ]
             }
           },
@@ -602,6 +775,74 @@
               "path": [
                 "users",
                 "update-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forget password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YWI4NWFhMjhkM2U1ZGRjZGM0OTQ5MiIsImVtYWlsIjoicGlsb3QwMTI1QGdtYWlsLmNvbSIsIm5iZiI6MTc3MzA3MTEzMCwiZXhwIjoxNzczMTU3NTIwLCJhdWQiOiJ1c2VyIiwiaXNzIjoiU2FyYWhhIiwianRpIjoiZjA4ODRlMDItMzNmNy00NWU2LWEwZDAtYjIxODA0NmY2ZDI4In0.q5evtY1Z4Sm-46TOqNLxjKoXjT4SXYRwQMnaMif9F4I",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"email\":\"pilot0111@gmail.com\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/forget-password",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "forget-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YWI4NWFhMjhkM2U1ZGRjZGM0OTQ5MiIsImVtYWlsIjoicGlsb3QwMTI1QGdtYWlsLmNvbSIsIm5iZiI6MTc3MzA3MTEzMCwiZXhwIjoxNzczMTU3NTIwLCJhdWQiOiJ1c2VyIiwiaXNzIjoiU2FyYWhhIiwianRpIjoiZjA4ODRlMDItMzNmNy00NWU2LWEwZDAtYjIxODA0NmY2ZDI4In0.q5evtY1Z4Sm-46TOqNLxjKoXjT4SXYRwQMnaMif9F4I",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"email\":\"pilot0111@gmail.com\",\r\n\"code\": \"668965\",\r\n\"newPassword\": \"123456B\",\r\n\"cPassword\": \"123456B\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/reset-password",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "reset-password"
               ]
             }
           },
