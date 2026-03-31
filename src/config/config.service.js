@@ -21,3 +21,6 @@ export const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 export const REDIS_URL = process.env.REDIS_URL;
 
+export const WHITELIST = process.env.WHITELIST?.split(",") || [];
+
+export const MONGODB_URI_ONLINE = process.env.MONGODB_URI_ONLINE; 

@@ -14,8 +14,14 @@ import {
   multerErrorHandler,
 } from "../../common/middleware/multer.js";
 import { multerEnum } from "../../common/enums/multer.enum.js";
+import messageRouter from "../message/message.controller.js";
 
-const userRouter = Router();
+const userRouter = Router({
+  caseSensitive: true, // now it is case sensitive
+  strict: true, // now it is strict means the path must match exactly even with trailing slashes
+});
+
+userRouter.use("/:userId/messages", messageRouter);
 
 userRouter.post("/signup", validation(UV.signUpSchema), US.signUp);
 // userRouter.post("/multer", multer_local({customType:[...multerEnum.image]}).single("attachment"), US.multerservice);
@@ -25,7 +31,7 @@ userRouter.post(
     multer_local({ customType: [...multerEnum.image] }).fields([
       { name: "attachment", maxCount: 1 },
       { name: "attachments", maxCount: 2 },
-    ])
+    ]),
   ),
   validation(UV.signUpSchema),
   US.signUp,
@@ -34,44 +40,36 @@ userRouter.post(
 userRouter.patch(
   "/confirm_email",
   validation(UV.confirmEmailSchema),
-  US.confirmEmail
-)
+  US.confirmEmail,
+);
 
-userRouter.patch(
-  "/resend_otp",
-  validation(UV.resendOtpSchema),
-  US.resendOtp
-)
+userRouter.patch("/resend_otp", validation(UV.resendOtpSchema), US.resendOtp);
 
 userRouter.post(
   "/forget-password",
   validation(UV.forgetPasswordSchema),
-  US.forgetPassword
+  US.forgetPassword,
 );
 
 userRouter.patch(
   "/reset-password",
   validation(UV.resetPasswordSchema),
-  US.resetPassword
+  US.resetPassword,
 );
 
-userRouter.patch(
-  "/enable-2sv/request",
-  authentication,
-  US.requestEnable2SV
-);
+userRouter.patch("/enable-2sv/request", authentication, US.requestEnable2SV);
 
 userRouter.patch(
   "/enable-2sv/confirm",
   authentication,
   validation(UV.confirm2SVSchema),
-  US.confirmEnable2SV
+  US.confirmEnable2SV,
 );
 
 userRouter.post(
   "/signin/confirm-2sv",
   validation(UV.confirmLogin2SVSchema),
-  US.confirmLogin2SV
+  US.confirmLogin2SV,
 );
 
 userRouter.post(
@@ -106,7 +104,7 @@ userRouter.get(
   authentication,
   authrization([roleEnum.admin]),
   validation(UV.shareProfileSchema),
-  US.getProfileVisits
+  US.getProfileVisits,
 );
 
 userRouter.patch(
@@ -127,9 +125,9 @@ userRouter.post(
   "/upload-profile-picture",
   authentication,
   multerErrorHandler(
-    multer_local({ customType: [...multerEnum.image] }).single("attachment")
+    multer_local({ customType: [...multerEnum.image] }).single("attachment"),
   ),
-  US.uploadProfilePicture
+  US.uploadProfilePicture,
 );
 
 userRouter.post(
@@ -138,13 +136,17 @@ userRouter.post(
   multerErrorHandler(
     multer_local({ customType: [...multerEnum.image] }).fields([
       { name: "attachments", maxCount: 2 },
-    ])
+    ]),
   ),
-  US.uploadCoverPicture
+  US.uploadCoverPicture,
 );
 
-userRouter.get("/logout",authentication, US.logout);
+userRouter.get("/logout", authentication, US.logout);
 
-userRouter.delete("/delete-profile-picture", authentication, US.deleteProfilePicture);
+userRouter.delete(
+  "/delete-profile-picture",
+  authentication,
+  US.deleteProfilePicture,
+);
 
 export default userRouter;

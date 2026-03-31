@@ -1,12 +1,19 @@
 import joi from "joi";
 import { Types } from "mongoose";
 
+const customId = (value, helpers) => {
+  const isValid = Types.ObjectId.isValid(value);
+  return isValid ? value : helpers.message("invalid id");
+};
+
 export const general_rules = {
   email: joi.string().email({
     tlds: { allow: false, deny: ["org"] },
     minDomainSegments: 2,
     maxDomainSegments: 2,
   }),
+  id: joi.string().custom(customId),
+
   password: joi
     .string()
     .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/)
@@ -16,10 +23,6 @@ export const general_rules = {
     }),
   cPassword: joi.string().valid(joi.ref("password")),
   //   id: joi.string().length(24).hex(),// fixed vlaue
-  id: joi.string().custom((value, helpers) => {
-    const isValid = Types.ObjectId.isValid(value);
-    return isValid ? value : helpers.message("invalid id");
-  }),
   file: joi
     .object({
       fieldname: joi.string().required(),

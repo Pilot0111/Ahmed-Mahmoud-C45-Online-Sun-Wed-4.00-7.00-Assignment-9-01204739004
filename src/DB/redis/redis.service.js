@@ -1,14 +1,14 @@
 import { redisClient } from "./redis.db.js";
 
-export const generateOtpKey = (email) => `otp::${email}`;
+export const generateOtpKey = (email) => `otp::confirmEmail::${email}`;
 export const max_Otp_tries = (email) => `otp::${email}::MaxOtptries`;
 export const block_key_otp = (email) => `otp::${email}::block`;
 
 export const max_login_tries = (email) => `login::${email}::MaxLoginTries`;
 export const block_key_login = (email) => `login::${email}::block`;
 
-export const generate2SVOtpKey = (email) => `2sv::${email}`;
-export const generateForgetPasswordOtpKey = (email) => `forgetPassword::${email}`;
+export const generate2SVOtpKey = (email) => `otp::2sv::${email}`;
+export const generateForgetPasswordOtpKey = (email) => `otp::forgetPassword::${email}`;
 export const generateRevokeTokenKey = (userId, jti) => jti ? `revokeToken::${userId}::${jti}` : `revokeToken::${userId}`;
 export const generateProfileKey = (userId) => `profile::${userId}`;
 

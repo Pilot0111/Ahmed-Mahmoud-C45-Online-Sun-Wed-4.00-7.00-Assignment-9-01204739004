@@ -18,7 +18,7 @@ import {
 import { generateOtp } from "../../common/utilites/security/code.generator.js";
 import { v4 as uuidv4 } from "uuid";
 import { Hash, randomUUID } from "node:crypto";
-import { 
+import {
   generateToken,
   verifyToken,
 } from "../../common/utilites/security/toke.security.js";
@@ -48,6 +48,73 @@ import {
   setValue,
   ttl,
 } from "../../DB/redis/redis.service.js";
+import { emailEvents } from "../../common/utilites/email/email.events.js";
+import { otpTemplate } from "../../common/utilites/email/otp.template.js";
+
+// Helper function to handle OTP Rate Limiting, Generation, and Storage
+const handleOtpWorkflow = async ({
+  email,
+  subject,
+  message,
+  redisKeyFunc,
+  updateDb = false,
+}) => {
+  const blockKey = block_key_otp(email);
+  const triesKey = max_Otp_tries(email);
+  const otpKey = redisKeyFunc(email);
+
+  // 1. Rate Limiting: Check if blocked
+  const isBlocked = await ttl(blockKey);
+  if (isBlocked > 0) {
+    throw new Error(
+      `You are blocked, please try again after ${isBlocked} seconds`,
+      { cause: 400 },
+    );
+  }
+
+  // 2. Rate Limiting: Check if OTP was recently sent (TTL check)
+  const otpTtl = await ttl(otpKey);
+  if (otpTtl > 0) {
+    throw new Error(
+      `OTP already sent, you can try again in ${otpTtl} seconds`,
+      { cause: 400 },
+    );
+  }
+
+  // 3. Security: Check max tries
+  const maxTries = await get({ key: triesKey });
+  if (maxTries >= 3) {
+    await setValue({ key: blockKey, value: 1, ttl: 60 });
+    await deleteKey(triesKey);
+    throw new Error(
+      "You have reached the maximum number of tries. Please wait 1 minute.",
+      { cause: 400 },
+    );
+  }
+
+  // 4. Action: Generate and Hash
+  const otp = generateOtp();
+  const hashedOtp = hashPassword({ plainText: otp });
+
+  // 5. Action: Send Email (Backgrounded using emailEvents)
+  emailEvents.emit("confirmEmail", async () => {
+    await sendEmail({ to: email, subject, message: message(otp) });
+  });
+
+  // 6. Storage: Redis
+  await setValue({ key: otpKey, value: hashedOtp, ttl: 600 });
+  await increment(triesKey);
+
+  // 7. Storage: Database (Optional)
+  if (updateDb) {
+    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    await db_service.findOneAndUpdate({
+      model: userModel,
+      filter: { email },
+      update: { otp: hashedOtp, otpExpiresAt },
+    });
+  }
+};
 
 export const signUp = async (req, res, next) => {
   const {
@@ -77,29 +144,12 @@ export const signUp = async (req, res, next) => {
     throw new Error("email already exists", { cause: 409 }); // error handler using express golbal error handler
   }
 
-  // Generate 6 digit OTP
-  const otp = generateOtp();
-  const hashedOtp = hashPassword({ plainText: otp });
-  const otpExpiresAt = new Date(Date.now() + 1 * 60 * 1000); // 1 minute
-
-  const emailSent = await sendEmail({
-    to: email,
-    subject: "Confirm your email - Saraha App",
-    message: `<h1>Welcome ${userName} to Saraha App</h1><p>Your OTP is <b>${otp}</b></p>`,
-    // attachments: req.files?.attachments,
-  });
-
-  if (!emailSent) {
-    throw new Error("Failed to send verification email", { cause: 500 });
-  }
-
   let encryptedPhone;
   if (encryptionMode === "asymmetric") {
     encryptedPhone = encryptAsymmetric(phone);
   } else {
     encryptedPhone = symmetricEncryption(phone);
   }
-  console.log(req.files);
   let arr_paths = [];
   if (req.files?.attachments) {
     for (const file of req.files.attachments) {
@@ -118,18 +168,19 @@ export const signUp = async (req, res, next) => {
         provider,
         phone: encryptedPhone,
         encryptionMode: encryptionMode || "symmetric",
-        otp: hashedOtp,
-        otpExpiresAt,
         profilePicture: req.files?.attachment?.[0]?.path,
         coverPictures: arr_paths,
       },
     });
-    await setValue({
-      key: generateOtpKey(user.email),
-      value: hashPassword({ plainText: otp }),
-      ttl: 60,
+
+    // Now called directly: Redis/DB updates are awaited, but the email part is backgrounded inside the helper
+    await handleOtpWorkflow({
+      email,
+      subject: "Confirm your email - Saraha App",
+      message: (otp) => otpTemplate({ userName, otp, subject: "Email Confirmation" }),
+      redisKeyFunc: generateOtpKey,
+      updateDb: true,
     });
-    await setValue({ key: max_Otp_tries(email), value: 1 }); // Removed the 60s expiration so it persists across retries
 
     responseSuccess({
       res,
@@ -183,6 +234,7 @@ export const confirmEmail = async (req, res) => {
     throw new Error("user not found", { cause: 404 });
   }
   await deleteKey(generateOtpKey(email));
+  await deleteKey(max_Otp_tries(email)); // Clear tries on success
   responseSuccess({
     res,
     status: 200,
@@ -203,46 +255,14 @@ export const resendOtp = async (req, res) => {
   if (!user) {
     throw new Error("user not found or already confirmed", { cause: 404 });
   }
- 
-  const isBlocked = await ttl(block_key_otp(email));
-  if (isBlocked > 0) {
-    throw new Error(`you are blocked, please try again after ${isBlocked} seconds`, { cause: 400 });
-  }
- 
-  const otpTtl = await ttl(generateOtpKey(email));
-  if ( otpTtl  > 0) {
-    throw new Error(`otp already sent, you can try again in ${otpTtl} seconds`, { cause: 400 });
-  }
-   
-const max_tries = await get({ key: max_Otp_tries(email) });
-if (max_tries >= 3) {
-  await setValue({ key: block_key_otp(email), value: 1, ttl: 60 }); 
-  await deleteKey(max_Otp_tries(email)); // Reset the attempt counter so they aren't permanently blocked!
-  throw new Error("you have reached the maximum number of tries", { cause: 400 });
-}
-  const otp = generateOtp();
-  const hashedOtp = hashPassword({ plainText: otp });
-  const otpExpiresAt = new Date(Date.now() + 1 * 60 * 1000); // 1 minute
-  //still im using the old method to updat the otp in the database 
-  await db_service.findOneAndUpdate({
-    model: userModel,
-    filter: { email }, 
-    update: { otp: hashedOtp, otpExpiresAt },
-  });
 
-  await sendEmail({
-    to: email,
+  await handleOtpWorkflow({
+    email,
     subject: "Resend OTP - Saraha App",
-    message: `<p>Your new OTP is <b>${otp}</b></p>`,
+    message: (otp) => otpTemplate({ userName: user.userName, otp, subject: "Resending OTP" }),
+    redisKeyFunc: generateOtpKey,
+    updateDb: true,
   });
-//here i am using the new method to update the otp in the redis
-  await setValue({
-    key: generateOtpKey(email),
-    value: hashedOtp,
-    ttl: 60,
-  });
-
- await increment(max_Otp_tries(email)); // Pass the string directly, not as an object
 
   responseSuccess({
     res,
@@ -253,8 +273,6 @@ if (max_tries >= 3) {
 
 export const signUpGmail = async (req, res) => {
   const { idToken } = req.body;
-  console.log(idToken);
-
   const client = new OAuth2Client();
 
   const ticket = await client.verifyIdToken({
@@ -341,28 +359,12 @@ export const signUp_Cloudinary = async (req, res, next) => {
     throw new Error("email already exists", { cause: 409 }); // error handler using express golbal error handler
   }
 
-  // Generate 6 digit OTP
-  const otp = generateOtp();
-  const hashedOtp = hashPassword({ plainText: otp });
-  const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
-
-  const emailSent = await sendEmail({
-    to: email,
-    subject: "Confirm your email - Saraha App",
-    message: `<h1>Welcome to Saraha App</h1><p>Your OTP is <b>${otp}</b></p>`,
-  });
-
-  if (!emailSent) {
-    throw new Error("Failed to send verification email", { cause: 500 });
-  }
-
   let encryptedPhone;
   if (encryptionMode === "asymmetric") {
     encryptedPhone = encryptAsymmetric(phone);
   } else {
     encryptedPhone = symmetricEncryption(phone);
   }
-  console.log(req.file);
 
   const { secure_url, public_id } = await cloudinary.uploader.upload(
     req.file.path,
@@ -387,14 +389,22 @@ export const signUp_Cloudinary = async (req, res, next) => {
         provider,
         phone: encryptedPhone,
         encryptionMode: encryptionMode || "symmetric",
-        otp: hashedOtp,
-        otpExpiresAt,
         profilePicture: {
           secure_url,
           public_id,
         },
       },
     });
+
+    // Consistent with the standard signup path
+    await handleOtpWorkflow({
+      email,
+      subject: "Confirm your email - Saraha App",
+      message: (otp) => otpTemplate({ userName, otp, subject: "Email Confirmation" }),
+      redisKeyFunc: generateOtpKey,
+      updateDb: true,
+    });
+
     responseSuccess({
       res,
       status: 201,
@@ -420,7 +430,10 @@ export const signIn = async (req, res) => {
 
   const isBlocked = await ttl(block_key_login(email));
   if (isBlocked > 0) {
-    throw new Error(`Account temporarily banned. Please try again after ${isBlocked} seconds`, { cause: 403 });
+    throw new Error(
+      `Account temporarily banned. Please try again after ${isBlocked} seconds`,
+      { cause: 403 },
+    );
   }
 
   const user = await db_service.findOne({
@@ -433,7 +446,9 @@ export const signIn = async (req, res) => {
     },
   });
   if (!user) {
-    throw new Error("user not found, or email is not confirmed", { cause: 404 });
+    throw new Error("user not found, or email is not confirmed", {
+      cause: 404,
+    });
   }
   const match = comparePassword({
     PlainText: password,
@@ -446,7 +461,10 @@ export const signIn = async (req, res) => {
     if (failed_tries >= 5) {
       await setValue({ key: block_key_login(email), value: 1, ttl: 300 }); // 300 seconds = 5 minutes
       await deleteKey(max_login_tries(email)); // Reset the counter so they don't get banned instantly again after 5 mins
-      throw new Error("Account temporarily banned due to 5 consecutive failed login attempts", { cause: 403 });
+      throw new Error(
+        "Account temporarily banned due to 5 consecutive failed login attempts",
+        { cause: 403 },
+      );
     }
 
     throw new Error("password is incorrect", { cause: 401 });
@@ -455,21 +473,20 @@ export const signIn = async (req, res) => {
   await deleteKey(max_login_tries(email)); // Reset the counter on a successful login
 
   if (user.twoStepVerification) {
-    const otp = generateOtp();
-    const hashedOtp = hashPassword({ plainText: otp });
-    
-    await sendEmail({
-      to: user.email,
+    // Use the centralized helper for 2SV login attempts to ensure rate-limiting
+    await handleOtpWorkflow({
+      email: user.email,
       subject: "Login 2-Step Verification - Saraha App",
-      message: `<p>Your login verification OTP is <b>${otp}</b></p>`,
+      message: (otp) => otpTemplate({ userName: user.userName, otp, subject: "Login Verification" }),
+      redisKeyFunc: generate2SVOtpKey,
     });
-    await setValue({ key: generate2SVOtpKey(user.email), value: hashedOtp, ttl: 300 }); // 5 mins
 
     return responseSuccess({
       res,
       status: 200,
-      message: "2-step verification required. Please check your email for the OTP.",
-      data: { require2SV: true }
+      message:
+        "2-step verification required. Please check your email for the OTP.",
+      data: { require2SV: true },
     });
   }
 
@@ -520,16 +537,12 @@ export const requestEnable2SV = async (req, res) => {
     throw new Error("2-step verification is already enabled", { cause: 400 });
   }
 
-  const otp = generateOtp();
-  const hashedOtp = hashPassword({ plainText: otp });
-
-  await sendEmail({
-    to: req.user.email,
+  await handleOtpWorkflow({
+    email: req.user.email,
     subject: "Enable 2-Step Verification - Saraha App",
-    message: `<p>Your OTP to enable 2-step verification is <b>${otp}</b></p>`,
+    message: (otp) => otpTemplate({ userName: req.user.userName, otp, subject: "Enabling 2-Step Verification" }),
+    redisKeyFunc: generate2SVOtpKey,
   });
-
-  await setValue({ key: generate2SVOtpKey(req.user.email), value: hashedOtp, ttl: 300 }); // 5 minutes
 
   responseSuccess({
     res,
@@ -541,7 +554,7 @@ export const requestEnable2SV = async (req, res) => {
 export const confirmEnable2SV = async (req, res) => {
   const { code } = req.body;
   const otpValue = await get({ key: generate2SVOtpKey(req.user.email) });
-  
+
   if (!otpValue) {
     throw new Error("OTP not found or expired", { cause: 404 });
   }
@@ -556,6 +569,7 @@ export const confirmEnable2SV = async (req, res) => {
   });
 
   await deleteKey(generate2SVOtpKey(req.user.email));
+  await deleteKey(max_Otp_tries(req.user.email)); // Clear tries on success
   await deleteKey(generateProfileKey(req.user._id)); // clear cache since profile changed
 
   responseSuccess({
@@ -567,26 +581,29 @@ export const confirmEnable2SV = async (req, res) => {
 
 export const confirmLogin2SV = async (req, res) => {
   const { email, code } = req.body;
-  
+
   const user = await db_service.findOne({
     model: userModel,
     filter: { email, provider: providerEnum.system },
   });
-  
+
   if (!user || !user.twoStepVerification) {
-    throw new Error("Invalid request or 2-step verification not enabled", { cause: 400 });
+    throw new Error("Invalid request or 2-step verification not enabled", {
+      cause: 400,
+    });
   }
 
   const otpValue = await get({ key: generate2SVOtpKey(email) });
   if (!otpValue) {
     throw new Error("OTP not found or expired", { cause: 404 });
   }
-  
+
   if (!comparePassword({ PlainText: code, cipherText: otpValue })) {
     throw new Error("OTP is incorrect", { cause: 401 });
   }
 
   await deleteKey(generate2SVOtpKey(email));
+  await deleteKey(max_Otp_tries(email)); // Clear tries on success
 
   // Generate the actual tokens now that 2SV is verified
   const jwtid = randomUUID();
@@ -798,7 +815,6 @@ export const updateProfile = async (req, res) => {
   if (!firstName && !lastName && !phone && !gender) {
     throw new Error("at least one field is required", { cause: 400 });
   }
-  console.log(req.user);
   if (phone) {
     if (req.user.encryptionMode === "asymmetric") {
       phone = encryptAsymmetric(phone);
@@ -810,7 +826,7 @@ export const updateProfile = async (req, res) => {
     model: userModel,
     filter: { _id: req.user._id },
     update: { firstName, lastName, phone, gender },
-    options: { select: "-password -otp -__v" },
+    options: { select: "-password -otp -__v", returnDocument: "after" },
   });
 
   if (updatedUser.encryptionMode === "asymmetric") {
@@ -841,13 +857,18 @@ export const updatePassword = async (req, res) => {
   if (!match) {
     throw new Error("old password is incorrect", { cause: 401 });
   }
-  const hashedPassword = hashPassword({ plainText: newPassword });
+  const hashedPassword = hashPassword({
+    plainText: newPassword,
+    salt: SALT_ROUNDS,
+  });
   const updatedUser = await db_service.findOneAndUpdate({
     model: userModel,
     filter: { _id: req.user._id },
     update: { password: hashedPassword, changeCredentials: new Date() },
-    options: { select: "-password -otp -__v" },
+    options: { select: "-password -otp -__v", returnDocument: "after" },
   });
+
+  await deleteKey(generateProfileKey(req.user._id));
 
   responseSuccess({
     res,
@@ -867,16 +888,12 @@ export const forgetPassword = async (req, res) => {
     throw new Error("user not found", { cause: 404 });
   }
 
-  const otp = generateOtp();
-  const hashedOtp = hashPassword({ plainText: otp });
-
-  await sendEmail({
-    to: email,
+  await handleOtpWorkflow({
+    email,
     subject: "Reset your password - Saraha App",
-    message: `<p>Your OTP to reset your password is <b>${otp}</b></p>`,
+    message: (otp) => otpTemplate({ userName: user.userName, otp, subject: "Password Reset" }),
+    redisKeyFunc: generateForgetPasswordOtpKey,
   });
-
-  await setValue({ key: generateForgetPasswordOtpKey(email), value: hashedOtp, ttl: 600 }); // 10 mins
 
   responseSuccess({
     res,
@@ -887,18 +904,21 @@ export const forgetPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   const { email, code, newPassword } = req.body;
-  
+
   const otpValue = await get({ key: generateForgetPasswordOtpKey(email) });
   if (!otpValue) {
     throw new Error("OTP not found or expired", { cause: 404 });
   }
-  
+
   if (!comparePassword({ PlainText: code, cipherText: otpValue })) {
     throw new Error("OTP is incorrect", { cause: 401 });
   }
 
-  const hashedPassword = hashPassword({ plainText: newPassword });
-  
+  const hashedPassword = hashPassword({
+    plainText: newPassword,
+    salt: SALT_ROUNDS,
+  });
+
   await db_service.findOneAndUpdate({
     model: userModel,
     filter: { email, provider: providerEnum.system },
@@ -906,6 +926,7 @@ export const resetPassword = async (req, res) => {
   });
 
   await deleteKey(generateForgetPasswordOtpKey(email));
+  await deleteKey(max_Otp_tries(email)); // Clear tries on success
 
   responseSuccess({
     res,
