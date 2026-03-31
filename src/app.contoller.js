@@ -10,7 +10,7 @@ import { deleteUnconfirmedUsersCron } from "./common/utilites/cron/deleteUnconfi
 import messageRouter from "./modules/message/message.controller.js";
 import helmet from "helmet";
 import {rateLimit} from "express-rate-limit"
-const bootsrap = async (req, res) => {
+const bootstrap = async () => {
   const corsOptions = {
     origin: function (origin, callback) {
       if ([...WHITELIST, undefined].includes(origin)) {
@@ -32,7 +32,6 @@ const bootsrap = async (req, res) => {
         message: "Too many requests from this IP, please try again after 15 minutes",
       });
     },
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     skipFailedRequests: false,
     skipSuccessfulRequests: false 
   });
@@ -49,18 +48,18 @@ const bootsrap = async (req, res) => {
   app.get("/", (req, res) => {
     res.status(200).json("Welome to Saraha App!");
   });
-  checkConnection();
-  connectRedis();
+  await checkConnection();
+  await connectRedis();
   deleteUnconfirmedUsersCron();
   app.use("/uploads", express.static("uploads"));
   app.use("/users", userRouter);
   app.use("/messages", messageRouter);
-  app.use("{/*demo}", (req, res, next) => {
+  app.use((req, res, next) => {
     throw new Error(`route ${req.originalUrl} not found`, { cause: 404 });
   });
 
   app.use((err, req, res, next) => {
-    res.status(err.cause || 500).json({
+    res.status(err.cause || 500).json({ 
       message: "something went wrong",
       error: err.message,
       stack: err.stack,
@@ -72,4 +71,4 @@ const bootsrap = async (req, res) => {
   });
 };
 
-export default bootsrap;
+export default bootstrap;
