@@ -1,7 +1,5 @@
 import crypto from "node:crypto";
-import dotenv from "dotenv";
 import { PRIVATE_KEY, PUBLIC_KEY } from "../../../config/config.service.js";
-dotenv.config();
 
 export const encryptAsymmetric = (plainText) => {
   if (!PUBLIC_KEY) throw new Error("PUBLIC_KEY not found in env");

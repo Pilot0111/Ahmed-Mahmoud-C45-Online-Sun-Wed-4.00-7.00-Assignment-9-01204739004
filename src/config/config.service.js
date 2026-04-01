@@ -7,7 +7,11 @@ let envPath = {
   production: resolve("./src/config/.env.production"),
   development: resolve("./src/config/.env.development"),
 };
-dotenv.config({ path: envPath[NODE_ENV] || envPath.development });
+
+const result = dotenv.config({ path: envPath[NODE_ENV] || envPath.development });
+if (result.error) {
+  dotenv.config(); // Fallback to root .env if specific file fails
+}
 
 export const PORT = process.env.PORT || 3000;
 export const MONGODB_URI = process.env.MONGODB_URI;
