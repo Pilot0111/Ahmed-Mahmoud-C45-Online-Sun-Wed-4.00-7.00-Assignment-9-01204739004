@@ -1,6 +1,7 @@
 import { createClient } from "redis";
+import { REDIS_URL } from "../../config/config.service.js";
 
-export const redisClient = createClient({ url: process.env.REDIS_URL });
+export const redisClient = createClient({ url: REDIS_URL });
 
 export const connectRedis = async () => {
   try {
@@ -10,4 +11,3 @@ export const connectRedis = async () => {
     console.log( "Redis connection failed!",error);
   }
 };
-

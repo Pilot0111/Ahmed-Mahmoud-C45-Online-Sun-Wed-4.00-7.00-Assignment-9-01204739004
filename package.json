@@ -7,7 +7,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development pm2 start src/index.js -i 0",
+    "dev": "cross-env NODE_ENV=development pm2 start src/index.js --name SarahaApp_Dev -i 0 --watch",
     "build": "cross-env NODE_ENV=production node src/index.js",
     "start": "node src/index.js"
   },

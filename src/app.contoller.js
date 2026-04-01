@@ -46,7 +46,7 @@ const bootstrap = async () => {
     express.json(),
   );
   app.get("/", (req, res) => {
-    res.status(200).json("Welome to Saraha App!");
+    res.status(200).json("Welcome to Saraha App!");
   });
   await checkConnection();
   await connectRedis();
