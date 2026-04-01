@@ -11,7 +11,7 @@
     "build": "cross-env NODE_ENV=production node src/index.js",
     "start": "node src/index.js"
   },
-  "keywords": [],
+  "keywords": [], 
   "author": "",
   "license": "ISC",
   "type": "module",
