@@ -7,7 +7,8 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development pm2 start src/index.js --name SarahaApp_Dev -i 0 --watch",
+    "dev": "cross-env NODE_ENV=development pm2 start src/index.js --name SarahaApp_Dev -i 0 --watch --ignore-watch=\"node_modules uploads .git\"",
+    "prod:start": "cross-env NODE_ENV=production pm2 start src/index.js --name SarahaApp_Prod -i 0",
     "build": "cross-env NODE_ENV=production node src/index.js",
     "start": "node src/index.js"
   },
