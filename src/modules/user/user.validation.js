@@ -65,6 +65,28 @@ export const signInSchema = {
     .required(),
 };
 
+export const forgotPasswordLinkSchema = {
+  body: joi.object({
+    email: general_rules.email.required(),
+  }).required(),
+};
+
+export const resetPasswordLinkSchema = {
+  body: joi.object({
+    token: joi.string().required(),
+    newPassword: general_rules.password.required(),
+    cPassword: joi.string().valid(joi.ref("newPassword")).required(),
+  }).required(),
+};
+
+export const resetPasswordConfirmationSchema = {
+  query: joi
+    .object({
+      token: joi.string().required(),
+    })
+    .required(),
+};
+
 export const shareProfileSchema = {
   params: joi
     .object({

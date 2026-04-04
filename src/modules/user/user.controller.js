@@ -51,10 +51,28 @@ userRouter.post(
   US.forgetPassword,
 );
 
+userRouter.post(
+  "/forgot-password-link",
+  validation(UV.forgotPasswordLinkSchema),
+  US.forgotPasswordLink,
+);
+
+userRouter.patch(
+  "/reset-password-link",
+  validation(UV.resetPasswordLinkSchema),
+  US.resetPasswordLink,
+);
+
 userRouter.patch(
   "/reset-password",
   validation(UV.resetPasswordSchema),
   US.resetPassword,
+);
+
+userRouter.get(
+  "/reset-password-confirmation",
+  validation(UV.resetPasswordConfirmationSchema),
+  US.resetPasswordConfirmation,
 );
 
 userRouter.patch("/enable-2sv/request", authentication, US.requestEnable2SV);

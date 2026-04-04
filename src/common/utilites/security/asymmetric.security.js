@@ -4,8 +4,9 @@ import { PRIVATE_KEY, PUBLIC_KEY } from "../../../config/config.service.js";
 export const encryptAsymmetric = (plainText) => {
   if (!PUBLIC_KEY) throw new Error("PUBLIC_KEY not found in env");
   
+  const key = PUBLIC_KEY.includes('---') ? PUBLIC_KEY : PUBLIC_KEY.replace(/\\n/g, '\n');
   const encrypted = crypto.publicEncrypt(
-    PUBLIC_KEY.replace(/\\n/g, '\n'),
+    key,
     Buffer.from(plainText)
   );
   return encrypted.toString("base64");

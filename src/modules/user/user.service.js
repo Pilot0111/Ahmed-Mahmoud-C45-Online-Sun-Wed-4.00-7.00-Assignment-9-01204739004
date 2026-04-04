@@ -58,6 +58,8 @@ const handleOtpWorkflow = async ({
   message,
   redisKeyFunc,
   updateDb = false,
+  customValue = null,
+  skipHash = false,
 }) => {
   const blockKey = block_key_otp(email);
   const triesKey = max_Otp_tries(email);
@@ -93,16 +95,16 @@ const handleOtpWorkflow = async ({
   }
 
   // 4. Action: Generate and Hash
-  const otp = generateOtp();
-  const hashedOtp = hashPassword({ plainText: otp });
+  const value = customValue || generateOtp();
+  const valueToStore = skipHash ? value : hashPassword({ plainText: value });
 
   // 5. Action: Send Email (Backgrounded using emailEvents)
   emailEvents.emit("confirmEmail", async () => {
-    await sendEmail({ to: email, subject, message: message(otp) });
+    await sendEmail({ to: email, subject, message: message(value) });
   });
 
   // 6. Storage: Redis
-  await setValue({ key: otpKey, value: hashedOtp, ttl: 600 });
+  await setValue({ key: otpKey, value: valueToStore, ttl: 600 });
   await increment(triesKey);
 
   // 7. Storage: Database (Optional)
@@ -111,7 +113,7 @@ const handleOtpWorkflow = async ({
     await db_service.findOneAndUpdate({
       model: userModel,
       filter: { email },
-      update: { otp: hashedOtp, otpExpiresAt },
+      update: { otp: valueToStore, otpExpiresAt },
     });
   }
 };
@@ -1064,5 +1066,104 @@ export const deleteProfilePicture = async (req, res, next) => {
     status: 200,
     message: "Profile picture deleted successfully",
     data: updatedUser,
+  });
+};
+
+export const forgotPasswordLink = async (req, res) => {
+  const { email } = req.body;
+  const user = await db_service.findOne({
+    model: userModel,
+    filter: { email, provider: providerEnum.system },
+  });
+
+  if (!user) {
+    throw new Error("user not found", { cause: 404 });
+  }
+
+  // Generate a one-time token valid for 15 minutes
+  // changeCredentials date to make it single-use
+  const token = generateToken({
+    payload: { 
+      email: user.email, 
+      version: user.changeCredentials ? user.changeCredentials.getTime() : 0 
+    },
+    signature: JWT_ACCESS_SECRET,
+    options: { expiresIn: "15m" },
+  });
+
+  // reset link whicih have to be adjusted according to frontend URL 
+  const resetLink = `${req.protocol}://${req.get("host")}/users/reset-password-confirmation?token=${token}`;
+
+  // Use the refined centralized helper!
+  await handleOtpWorkflow({
+    email,
+    subject: "Password Reset Link - Saraha App",
+    message: (value) => `
+      <h1>Reset Your Password</h1>
+      <p>Click the link below to reset your password. This link expires in 15 minutes.</p>
+      <a href="${value}" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
+    `,
+    redisKeyFunc: (email) => `limit:reset-link:${email}`,
+    customValue: resetLink,
+    skipHash: true, // Crucial: JWT is too long for bcrypt hashing
+  });
+
+  responseSuccess({
+    res,
+    status: 200,
+    message: "Password reset link sent to your email",
+  });
+};
+
+export const resetPasswordLink = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  const decoded = verifyToken({ token, signature: JWT_ACCESS_SECRET });
+  if (!decoded || !decoded.email) {
+    throw new Error("Invalid or expired reset link", { cause: 401 });
+  }
+
+  const user = await db_service.findOne({
+    model: userModel,
+    filter: { email: decoded.email, provider: providerEnum.system },
+  });
+
+  if (!user) {
+    throw new Error("User not found", { cause: 404 });
+  }
+
+  // Check if the link was already used (by comparing the version/timestamp)
+  const currentVersion = user.changeCredentials ? user.changeCredentials.getTime() : 0;
+  if (decoded.version !== currentVersion) {
+    throw new Error("This reset link has already been used", { cause: 401 });
+  }
+
+  const hashedPassword = hashPassword({
+    plainText: newPassword,
+    salt: SALT_ROUNDS,
+  });
+
+  await db_service.findOneAndUpdate({
+    model: userModel,
+    filter: { email: decoded.email },
+    update: { password: hashedPassword, changeCredentials: new Date() },
+  });
+
+  await deleteKey(generateProfileKey(user._id));
+  await deleteKey(`limit:reset-link:${decoded.email}`);
+  await deleteKey(max_Otp_tries(decoded.email));
+
+  responseSuccess({ res, status: 200, message: "Password reset successfully" });
+};
+
+export const resetPasswordConfirmation = async (req, res) => {
+  const { token } = req.query;
+
+  // In a real app, you would res.render an HTML page here.
+  // For now, we return a success message so you can copy the token to Postman.
+  responseSuccess({
+    res,
+    message: "Link verified. Please use this token in your PATCH request body to reset your password.",
+    data: { token },
   });
 };

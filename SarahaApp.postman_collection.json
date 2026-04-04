@@ -17,7 +17,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\"userName\" : \"Ahmed Mahmoud\",\r\n\"email\": \"pilot0126@gmail.com\",\r\n\"password\": \"ahmed1234A\",\r\n\"cPassword\": \"ahmed1234A\",\r\n\"age\": 40,\r\n\"gender\":\"male\",\r\n\"role\": \"admin\",\r\n\"phone\":\"0555136589\",\r\n\"provider\":\"system\",\r\n\"encryptionMode\":\"asymmetric\"\r\n}\r\n",
+              "raw": "{\"userName\" : \"Ahmed Mahmoud\",\r\n\"email\": \"pilot0111@gmail.com\",\r\n\"password\": \"ahmed1234A\",\r\n\"cPassword\": \"ahmed1234A\",\r\n\"age\": 40,\r\n\"gender\":\"male\",\r\n\"role\": \"admin\",\r\n\"phone\":\"0555136589\",\r\n\"provider\":\"system\",\r\n\"encryptionMode\":\"asymmetric\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -25,11 +25,10 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/users/signup",
+              "raw": "{{local_url}}/users/signup",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "signup"
@@ -119,11 +118,10 @@
               ]
             },
             "url": {
-              "raw": "localhost:3000/users/multer_cloudinary",
+              "raw": "{{local_url}}/users/multer_cloudinary",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "multer_cloudinary"
@@ -167,11 +165,10 @@
               ]
             },
             "url": {
-              "raw": "localhost:3000/users/multer_memory",
+              "raw": "{{local_url}}/users/multer_memory",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "multer_memory"
@@ -257,11 +254,10 @@
               ]
             },
             "url": {
-              "raw": "localhost:3000/users/signup/multer_local",
+              "raw": "{{local_url}}/users/signup/multer_local",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "signup",
@@ -278,7 +274,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\":\"pilot0111@gmail.com\",\r\n    \"code\": \"814297\"\r\n}",
+              "raw": "{\r\n    \"email\":\"pilot0111@gmail.com\",\r\n    \"code\": \"210546\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -286,11 +282,10 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/users/confirm_email",
+              "raw": "{{local_url}}/users/confirm_email",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "confirm_email"
@@ -314,11 +309,10 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/users/resend_otp",
+              "raw": "{{local_url}}/users/resend_otp",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "resend_otp"
@@ -331,17 +325,16 @@
           "name": "Enable 2-step verification",
           "request": {
             "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YmJjZjU0NDMyZTgxOTQ3OGI0N2NkZSIsImVtYWlsIjoicGlsb3QwMTExQGdtYWlsLmNvbSIsImlhdCI6MTc3NDA1NzU3OSwibmJmIjoxNzc0MDU3NTg5LCJleHAiOjE3NzQxNDM5NzksImF1ZCI6InVzZXIiLCJpc3MiOiJTYXJhaGEiLCJqdGkiOiJiY2FiZjViYS0yYTgxLTQwYmYtYmIwMi0zMTRkY2UwNzQyYjkifQ.aXfKFimFj5sWnBZtpZj0ALcu6UWPm_No8itXGqTZU1A",
-                  "type": "string"
-                }
-              ]
+              "type": "noauth"
             },
             "method": "PATCH",
-            "header": [],
+            "header": [
+              {
+                "key": "authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"email\":\"pilot0111@gmail.com\",\r\n    \"code\": \"783950\"\r\n}",
@@ -352,11 +345,10 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/users/enable-2sv/request",
+              "raw": "{{local_url}}/users/enable-2sv/request",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "enable-2sv",
@@ -391,11 +383,10 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/users/enable-2sv/confirm",
+              "raw": "{{local_url}}/users/enable-2sv/confirm",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "enable-2sv",
@@ -430,11 +421,10 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/users/enable-2sv/confirm",
+              "raw": "{{local_url}}/users/enable-2sv/confirm",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "enable-2sv",
@@ -446,6 +436,23 @@
         },
         {
           "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let response = pm.response.json();\r",
+                  "console.log(response)\r",
+                  "// pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });\r",
+                  "pm.environment.set(\"access_token\",response.data.access_token)\r",
+                  "pm.environment.set(\"refresh_token\",response.data.refresh_token)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
@@ -454,7 +461,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n\"email\": \"pilot0111@gmail.com\",\r\n\"password\": \"123456A\"\r\n}\r\n",
+              "raw": "{\r\n\"email\": \"pilot01111@gmail.com\",\r\n\"password\": \"ahmed1234A\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -462,11 +469,10 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/users/signin?x=20",
+              "raw": "{{local_url}}/users/signin?x=20",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "signin"
@@ -504,11 +510,10 @@
               ]
             },
             "url": {
-              "raw": "localhost:3000/users/upload-cover-picture",
+              "raw": "{{local_url}}/users/upload-cover-picture",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "upload-cover-picture"
@@ -540,11 +545,10 @@
               ]
             },
             "url": {
-              "raw": "localhost:3000/users/upload-profile-picture",
+              "raw": "{{local_url}}/users/upload-profile-picture",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "upload-profile-picture"
@@ -579,11 +583,10 @@
               ]
             },
             "url": {
-              "raw": "localhost:3000/users/delete-profile-picture",
+              "raw": "{{local_url}}/users/delete-profile-picture",
               "host": [
-                "localhost"
+                "{{local_url}}"
               ],
-              "port": "3000",
               "path": [
                 "users",
                 "delete-profile-picture"
@@ -610,11 +613,11 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/users/share-profile/:id",
+              "raw": "localhost:300/users/share-profile/:id",
               "host": [
                 "localhost"
               ],
-              "port": "3000",
+              "port": "300",
               "path": [
                 "users",
                 "share-profile",
@@ -783,7 +786,7 @@
         {
           "name": "Forget password",
           "request": {
-            "method": "PATCH",
+            "method": "POST",
             "header": [
               {
                 "key": "Authorization",
@@ -843,6 +846,111 @@
               "path": [
                 "users",
                 "reset-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forget password Link",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"email\":\"pilot0111@gmail.com\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/forgot-password-link",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "forgot-password-link"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forget password Link Confirmation",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YWI4NWFhMjhkM2U1ZGRjZGM0OTQ5MiIsImVtYWlsIjoicGlsb3QwMTI1QGdtYWlsLmNvbSIsIm5iZiI6MTc3MzA3MTEzMCwiZXhwIjoxNzczMTU3NTIwLCJhdWQiOiJ1c2VyIiwiaXNzIjoiU2FyYWhhIiwianRpIjoiZjA4ODRlMDItMzNmNy00NWU2LWEwZDAtYjIxODA0NmY2ZDI4In0.q5evtY1Z4Sm-46TOqNLxjKoXjT4SXYRwQMnaMif9F4I",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"email\":\"pilot0111@gmail.com\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/reset-password-confirmation?token=PASTE_TOKEN_FROM_EMAIL_HERE",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "reset-password-confirmation"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "PASTE_TOKEN_FROM_EMAIL_HERE"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset password Link",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YWI4NWFhMjhkM2U1ZGRjZGM0OTQ5MiIsImVtYWlsIjoicGlsb3QwMTI1QGdtYWlsLmNvbSIsIm5iZiI6MTc3MzA3MTEzMCwiZXhwIjoxNzczMTU3NTIwLCJhdWQiOiJ1c2VyIiwiaXNzIjoiU2FyYWhhIiwianRpIjoiZjA4ODRlMDItMzNmNy00NWU2LWEwZDAtYjIxODA0NmY2ZDI4In0.q5evtY1Z4Sm-46TOqNLxjKoXjT4SXYRwQMnaMif9F4I",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YWI4NWFhMjhkM2U1ZGRjZGM0OTQ5MiIsImVtYWlsIjoicGlsb3QwMTI1QGdtYWlsLmNvbSIsIm5iZiI6MTc3MzA3MTEzMCwiZXhwIjoxNzczMTU3NTIwLCJhdWQiOiJ1c2VyIiwiaXNzIjoiU2FyYWhhIiwianRpIjoiZjA4ODRlMDItMzNmNy00NWU2LWEwZDAtYjIxODA0NmY2ZDI4In0.q5evtY1Z4Sm-46TOqNLxjKoXjT4SXYRwQMnaMif9F4I\",\r\n  \"newPassword\": \"A12344AA\",\r\n  \"cPassword\": \"A12344AA\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:3000/users/reset-password-link",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "users",
+                "reset-password-link"
               ]
             }
           },
@@ -913,6 +1021,132 @@
               "port": "3000",
               "path": [
                 "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "content",
+                  "value": "Hi , this is the first message",
+                  "type": "text",
+                  "uuid": "6d8af7b9-ab6a-48b1-b841-986529f66a86"
+                },
+                {
+                  "key": "userId",
+                  "value": "69c92aad0b4cd03b835b5766",
+                  "type": "text",
+                  "uuid": "12d736af-b6d3-4d8b-8a28-9ef5b2452d22"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{local_url}}/messages/send",
+              "host": [
+                "{{local_url}}"
+              ],
+              "path": [
+                "messages",
+                "send"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Message by Id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzkyYWFkMGI0Y2QwM2I4MzViNTc2NiIsImVtYWlsIjoicGlsb3QwMTExQGdtYWlsLmNvbSIsImlhdCI6MTc3NTA0NTA3MiwibmJmIjoxNzc1MDQ1MDgyLCJleHAiOjE3NzUxMzE0NzIsImF1ZCI6InVzZXIiLCJpc3MiOiJTYXJhaGEiLCJqdGkiOiIzOWI3NTk3Zi0yYWVlLTQ1ODEtYjliYS1mNjg0Njg5YjdiMmQifQ.o5VcXWuWl77Gu0BhTcV2EuG4do9R5TYLHtA5q5VKi1w",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{local_url}}/messages/69c9fe47db807ba2acb82cb5",
+              "host": [
+                "{{local_url}}"
+              ],
+              "path": [
+                "messages",
+                "69c9fe47db807ba2acb82cb5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Message",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzkyYWFkMGI0Y2QwM2I4MzViNTc2NiIsImVtYWlsIjoicGlsb3QwMTExQGdtYWlsLmNvbSIsImlhdCI6MTc3NDg0NjM3NCwibmJmIjoxNzc0ODQ2Mzg0LCJleHAiOjE3NzQ5MzI3NzQsImF1ZCI6InVzZXIiLCJpc3MiOiJTYXJhaGEiLCJqdGkiOiIzNTZkODY3Yi1kM2UzLTQ2NjYtYTBjOS0wZTg2YmFlNzhkNDgifQ.Ix4atmXyQBF_MXMvRhWm13KoT8ChWvunT4jT5m_aUzg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{local_url}}/messages/",
+              "host": [
+                "{{local_url}}"
+              ],
+              "path": [
+                "messages",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Message with ID in url",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzkyYWFkMGI0Y2QwM2I4MzViNTc2NiIsImVtYWlsIjoicGlsb3QwMTExQGdtYWlsLmNvbSIsImlhdCI6MTc3NDg0NjM3NCwibmJmIjoxNzc0ODQ2Mzg0LCJleHAiOjE3NzQ5MzI3NzQsImF1ZCI6InVzZXIiLCJpc3MiOiJTYXJhaGEiLCJqdGkiOiIzNTZkODY3Yi1kM2UzLTQ2NjYtYTBjOS0wZTg2YmFlNzhkNDgifQ.Ix4atmXyQBF_MXMvRhWm13KoT8ChWvunT4jT5m_aUzg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{local_url}}/users/69c92aad0b4cd03b835b5766/messages/",
+              "host": [
+                "{{local_url}}"
+              ],
+              "path": [
+                "users",
+                "69c92aad0b4cd03b835b5766",
+                "messages",
+                ""
               ]
             }
           },
